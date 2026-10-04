@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { protocolConfig } from "@/lib/blockchain/config";
 import { Reveal } from "@/components/kiln/Reveal";
+import { HeatTitle } from "@/components/kiln/HeatTitle";
 import { RollingNumber } from "@/components/kiln/RollingNumber";
 import { CopyAddress } from "@/components/kiln/CopyAddress";
 
@@ -21,7 +22,7 @@ export const LiveKiln: React.FC<LiveKilnProps> = ({ apy, inKiln, stakers }) => (
           <span className="w-1.5 h-1.5 rounded-full bg-glow animate-pulse-dot" aria-hidden="true" />
           Read live · chain {protocolConfig.chainId}
         </p>
-        <h2 className="mt-4 font-display font-bold text-[2.6rem] sm:text-6xl tracking-[-0.04em] leading-[0.95]">The kiln, right now.</h2>
+        <HeatTitle className="mt-4 font-display font-bold text-[2.6rem] sm:text-6xl tracking-[-0.04em] leading-[0.95]">The kiln, right now.</HeatTitle>
       </Reveal>
       <Reveal delay={0.1}>
         <Link href="/stats" className="btn btn-ghost">

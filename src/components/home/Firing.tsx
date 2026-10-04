@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useReducedMotionSafe } from "@/components/kiln/useReducedMotionSafe";
 import { KilnOrb } from "@/components/kiln/KilnOrb";
 import { Reveal } from "@/components/kiln/Reveal";
+import { HeatTitle } from "@/components/kiln/HeatTitle";
 
 const STEPS = [
   {
@@ -45,9 +46,9 @@ export const Firing: React.FC = () => {
       <div className="grid lg:grid-cols-12 gap-6 items-end">
         <Reveal className="lg:col-span-7">
           <p className="eyebrow">How it works</p>
-          <h2 className="mt-4 font-display font-bold text-[2.6rem] sm:text-6xl tracking-[-0.04em] leading-[0.95] text-balance">
+          <HeatTitle className="mt-4 font-display font-bold text-[2.6rem] sm:text-6xl tracking-[-0.04em] leading-[0.95] text-balance">
             One firing, <span className="text-heat">four moves.</span>
-          </h2>
+          </HeatTitle>
         </Reveal>
         <Reveal delay={0.1} className="lg:col-span-4 lg:col-start-9">
           <p className="text-lg text-bone-2 leading-relaxed text-pretty">

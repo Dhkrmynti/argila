@@ -5,7 +5,7 @@ import { useLayer5Staking } from "@/lib/hooks/useLayer5Staking";
 import { formatApy, formatTokenAmount } from "@/lib/utils/formatters";
 import { Hero } from "./Hero";
 import { Firing } from "./Firing";
-import { Stages } from "./Stages";
+import { ScrollVessel } from "./ScrollVessel";
 import { Materials } from "./Materials";
 import { LiveKiln } from "./LiveKiln";
 import { Faq } from "./Faq";
@@ -23,7 +23,7 @@ export const Home: React.FC = () => {
     <div className="relative w-full overflow-x-clip">
       <Hero />
       <Firing />
-      <Stages />
+      <ScrollVessel />
       <Materials />
       <LiveKiln apy={apy} inKiln={inKiln} stakers={stakers} />
       <Faq />

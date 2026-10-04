@@ -139,7 +139,7 @@ input[type="number"] {
   }
   .btn-hot {
     color: #1A0E07;
-    background: linear-gradient(180deg, #FFD08A, #F28C38 55%, #D9622B);
+    background: radial-gradient(120px circle at var(--mx, -100px) var(--my, -100px), rgba(255, 240, 212, 0.35), transparent 60%), linear-gradient(180deg, #FFD08A, #F28C38 55%, #D9622B);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 10px 30px -10px rgba(242, 140, 56, 0.7);
   }
   .btn-hot:hover:not(:disabled) {
@@ -149,11 +149,11 @@ input[type="number"] {
   .btn-ghost {
     color: var(--bone);
     border: 1px solid rgba(255, 226, 196, 0.18);
-    background: rgba(255, 226, 196, 0.02);
+    background: radial-gradient(120px circle at var(--mx, -100px) var(--my, -100px), rgba(255, 240, 212, 0.25), transparent 60%), rgba(255, 226, 196, 0.02);
   }
   .btn-ghost:hover:not(:disabled) {
     border-color: rgba(255, 197, 110, 0.55);
-    background: rgba(255, 197, 110, 0.06);
+    background: radial-gradient(120px circle at var(--mx, -100px) var(--my, -100px), rgba(255, 240, 212, 0.25), transparent 60%), rgba(255, 197, 110, 0.06);
   }
   .btn-bone {
     color: var(--coal);

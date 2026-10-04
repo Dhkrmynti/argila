@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { KilnOrb } from "@/components/kiln/KilnOrb";
 import { Embers } from "@/components/kiln/Embers";
 import { Reveal } from "@/components/kiln/Reveal";
+import { HeatTitle } from "@/components/kiln/HeatTitle";
 
 export const Cta: React.FC = () => (
   <section className="relative mx-auto max-w-6xl px-5 sm:px-8 pt-12">
@@ -13,9 +14,9 @@ export const Cta: React.FC = () => (
         <KilnOrb heat={0.95} />
       </div>
       <Reveal className="relative">
-        <h2 className="font-display font-bold text-[3rem] sm:text-[5.5rem] tracking-[-0.045em] leading-[0.9] text-balance">
+        <HeatTitle className="font-display font-bold text-[3rem] sm:text-[5.5rem] tracking-[-0.045em] leading-[0.9] text-balance">
           The kiln is <span className="text-heat">lit.</span>
-        </h2>
+        </HeatTitle>
         <p className="mt-6 mx-auto max-w-lg text-lg text-bone-2 leading-relaxed">
           Connect a wallet with USDG on Robinhood Chain and set your first piece in. It starts earning on the next block.
         </p>

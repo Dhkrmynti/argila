@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { Reveal } from "@/components/kiln/Reveal";
+import { HeatTitle } from "@/components/kiln/HeatTitle";
 
 const FAQS = [
   {
@@ -37,7 +38,7 @@ export const Faq: React.FC = () => {
       <Reveal className="lg:col-span-4">
         <div className="lg:sticky lg:top-32">
           <p className="eyebrow">Questions</p>
-          <h2 className="mt-4 font-display font-bold text-[2.6rem] sm:text-5xl tracking-[-0.04em] leading-[0.98]">Before you fire.</h2>
+          <HeatTitle className="mt-4 font-display font-bold text-[2.6rem] sm:text-5xl tracking-[-0.04em] leading-[0.98]">Before you fire.</HeatTitle>
           <Link href="/docs" className="mt-8 btn btn-ghost">
             Read the docs <ArrowUpRight className="w-4 h-4" />
           </Link>

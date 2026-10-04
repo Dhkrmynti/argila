@@ -4,6 +4,7 @@ import { Providers } from "@/components/Providers";
 import { Nav } from "@/components/kiln/Nav";
 import { Footer } from "@/components/kiln/Footer";
 import { Backdrop } from "@/components/kiln/Backdrop";
+import { CursorGlow } from "@/components/kiln/CursorGlow";
 import localFont from "next/font/local";
 
 // Self-hosted so the site never depends on reaching Google Fonts at build or run time
@@ -82,6 +83,7 @@ export default function RootLayout({
       </head>
       <body className="bg-coal text-bone font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden">
         <Providers>
+          <CursorGlow />
           <Backdrop />
           <Nav />
           <main className="flex-1 relative z-10">{children}</main>

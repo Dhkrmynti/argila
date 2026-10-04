@@ -66,7 +66,7 @@ Rules:
 ## Components (src/components/kiln)
 
 - `KilnOrb` — `heat` 0..1 sets core size, brightness and halo; `simple` drops the turbulence layer and heavy shadow for small sizes (< ~120px). Cold (low heat) is dimmed via brightness/saturate.
-- `FireCanvas` — WebGL fbm-noise fire for the hero, rendered at half resolution, paused off screen; under reduced motion it keeps burning at 0.4× speed (owner's call: the fire is the brand); hides itself on WebGL context loss so the CSS glow behind it shows.
+- `FireCanvas` — WebGL fbm-noise fire for the hero, rendered at half resolution, paused off screen; under reduced motion it keeps burning at 0.4× speed (owner's call: the fire is the brand); hides itself on WebGL context loss so the CSS glow behind it shows. `pulseKey` prop: each change flares the fire (~600 ms, half amplitude under reduced motion); the hero feeds it from `useBlockNumber` (throttled to 1 per 1.5 s, first block skipped) and shows a "Block #N fired" chip for 2.5 s. The flames also lean toward and brighten near the mouse (eased, mouse pointers only; lean is off under reduced motion).
 - `useReducedMotionSafe` — returns false until mounted (avoids hydration mismatch); entry animations are governed globally by `<MotionConfig reducedMotion="user">` in Providers.
 - `Embers` — canvas sparks; pauses off screen, off under reduced motion. `density`, `heat`.
 - `HeatBar` — the five-stage firing scale with a current marker.
@@ -78,8 +78,8 @@ Utility classes (globals.css): `.surface`, `.surface-raised`, `.surface-hot` (gl
 
 ## Pages
 
-- `/` (`components/home`): Hero (one screen: chip, headline, one line, two buttons; living WebGL fire `FireCanvas` spread across the bottom + embers; no stats, no vessel) → Firing (four moves: Set, Fire, Draw, Unload) → Stages (interactive scale) → Materials (bento: USDG light tile, ARGL hot tile) → LiveKiln (figures + contracts) → Faq → Cta.
-- `/stake` (`components/console/KilnConsole`): deposit/withdraw console + "Your firing" panel.
+- `/` (`components/home`): Hero (one screen: chip, headline, one line, two buttons; living WebGL fire `FireCanvas` spread across the bottom + embers; no stats, no vessel) → Firing (four moves: Set, Fire, Draw, Unload) → ScrollVessel (pinned ~250vh, 180vh on mobile: one vessel fired from raw clay to porcelain by scroll progress, five equal segments, one per stage; under reduced motion it falls back to the static `Stages` scale) → Materials (bento: USDG light tile, ARGL hot tile) → LiveKiln (figures + contracts) → Faq → Cta.
+- `/stake` (`components/console/KilnConsole`): deposit/withdraw console + "Your firing" panel. While typing a deposit, the orb previews the heat of the new pool share `(staked + input) / (totalStaked + input)`, labelled "Preview". A confirmed deposit (staked balance rises on chain) fires an `EmberBurst` from the orb; a successful claim sends an `EmberFlight` from the ARGL figure to the nav wallet button (`[data-wallet-button]`). Under reduced motion: glow pulse only, no flight.
 - `/position` (`components/Position/MyFiring`): stage hero with orb + HeatBar, stats, claim.
 - `/stats` (`components/Stats/KilnStats`): bento of live figures + contracts.
 - `/docs`: content kept, restyled on the new tokens. `/protocol` redirects to `/docs`.

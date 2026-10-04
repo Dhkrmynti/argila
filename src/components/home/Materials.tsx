@@ -1,5 +1,6 @@
 import React from "react";
 import { Reveal } from "@/components/kiln/Reveal";
+import { HeatTitle } from "@/components/kiln/HeatTitle";
 import { VesselMark } from "@/components/kiln/Logo";
 
 /* Clay and fire: what goes in and what comes out, laid out as a bento of fired tiles. */
@@ -7,9 +8,9 @@ export const Materials: React.FC = () => (
   <section className="relative mx-auto max-w-6xl px-5 sm:px-8 py-24 sm:py-32">
     <Reveal className="max-w-2xl">
       <p className="eyebrow">Two materials</p>
-      <h2 className="mt-4 font-display font-bold text-[2.6rem] sm:text-6xl tracking-[-0.04em] leading-[0.95] text-balance">
+      <HeatTitle className="mt-4 font-display font-bold text-[2.6rem] sm:text-6xl tracking-[-0.04em] leading-[0.95] text-balance">
         Clay in. <span className="text-heat">Fire out.</span>
-      </h2>
+      </HeatTitle>
     </Reveal>
 
     <div className="mt-14 grid grid-cols-1 md:grid-cols-6 gap-4">

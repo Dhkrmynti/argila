@@ -107,7 +107,7 @@ Deleted in the rebuild: `components/{landing,Scene,vault,Navigation,Brand,Layer5
 
 **Done, not yet committed:** the full "Heat" UI rebuild (everything in section 5), DESIGN.md / PRODUCT.md / handoff.md updates. Typecheck passes; pages render (200) and were checked in screenshots at 1440px.
 
-**UI ideas queued:** see `ui-improvements.md` (owner wants items 1 + 2 first, then 3).
+**UI ideas queued:** see `ui-improvements.md`. Items 1 (block pulse + chip) and 2 (cursor-reactive fire) are implemented in `FireCanvas.tsx` and `Hero.tsx` (typecheck passes; WebGL not verified visually, owner must check in a real browser). Next: item 6. Item 5 (button cursor glow) is implemented in `globals.css` and `CursorGlow.tsx`. Item 4 (hot stake console: preview heat, deposit burst, claim flight; `kiln/EmberBurst.tsx`) is implemented and typechecked, not yet tested with real transactions. Item 3 (`home/ScrollVessel.tsx`, replaces `Stages` on the landing page, which stays as the reduced-motion fallback) is implemented and typechecked, not yet checked visually.
 
 **Next steps:**
 1. [x] Owner reviewed; hero reworked twice (now: minimal text + wide animated WebGL fire). Owner confirmed the fire animates.

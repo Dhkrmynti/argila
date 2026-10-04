@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { parseUnits } from "viem";
 import { ArrowRight, Info, Wallet } from "lucide-react";
 import { useLayer5Staking } from "@/lib/hooks/useLayer5Staking";
 import { formatApy, formatDuration, formatTokenAmount } from "@/lib/utils/formatters";
@@ -10,6 +11,7 @@ import { TransactionModal } from "@/components/Transaction/TransactionModal";
 import { WrongNetworkBanner } from "@/components/Wallet/WrongNetworkBanner";
 import { WalletConnectModal } from "@/components/Wallet/WalletConnectModal";
 import { KilnOrb } from "@/components/kiln/KilnOrb";
+import { EmberBurst, EmberFlight } from "@/components/kiln/EmberBurst";
 import { RollingNumber } from "@/components/kiln/RollingNumber";
 import { stageFor } from "@/components/kiln/stages";
 import { useLiveRewards } from "@/components/kiln/useLiveRewards";
@@ -41,6 +43,10 @@ export const KilnConsole: React.FC = () => {
   const [mode, setMode] = useState<Mode>("deposit");
   const [amount, setAmount] = useState("");
   const [walletModalOpen, setWalletModalOpen] = useState(false);
+  const [burstKey, setBurstKey] = useState(0);
+  const [flightKey, setFlightKey] = useState(0);
+  const pendingAction = useRef<{ kind: "stake"; before: bigint } | { kind: "claim" } | null>(null);
+  const rewardsRef = useRef<HTMLParagraphElement>(null);
 
   const live = useLiveRewards(pendingRewards, rewardRate, stakedBalance, totalStaked);
   const stage = stageFor(isConnected ? argilaState : "dormant");
@@ -53,6 +59,39 @@ export const KilnConsole: React.FC = () => {
   const parsed = parseFloat(amount);
   const valid = Boolean(amount) && parsed > 0;
 
+  const previewInput = useMemo(() => {
+    if (mode !== "deposit" || !valid) return 0n;
+    try {
+      return parseUnits(amount, stakeDecimals);
+    } catch {
+      return 0n;
+    }
+  }, [mode, valid, amount, stakeDecimals]);
+  const previewing = isConnected && previewInput > 0n;
+  const previewShare = previewing ? Number(stakedBalance + previewInput) / Number(totalStaked + previewInput) : 0;
+  const orbHeat = previewing ? Math.max(stage.heat, Math.min(1, 0.3 + 0.7 * Math.sqrt(previewShare))) : stage.heat;
+
+  useEffect(() => {
+    const action = pendingAction.current;
+    if (action?.kind === "stake" && stakedBalance > action.before) {
+      pendingAction.current = null;
+      setBurstKey((k) => k + 1);
+    }
+  }, [stakedBalance]);
+
+  useEffect(() => {
+    const action = pendingAction.current;
+    if (!action) return;
+    if (txState.step === "FAILED") {
+      pendingAction.current = null;
+      return;
+    }
+    if (action.kind === "claim" && txState.step === "SUCCESS") {
+      pendingAction.current = null;
+      setFlightKey((k) => k + 1);
+    }
+  }, [txState.step]);
+
   const setPct = (pct: number) => {
     if (source === 0n) return setAmount("");
     if (pct === 100) return setAmount(formatTokenAmount(source, stakeDecimals, 6));
@@ -62,9 +101,18 @@ export const KilnConsole: React.FC = () => {
 
   const submit = async () => {
     if (!valid) return;
-    if (mode === "deposit") await stake(amount);
-    else await unstake(amount);
+    if (mode === "deposit") {
+      pendingAction.current = { kind: "stake", before: stakedBalance };
+      await stake(amount);
+    } else {
+      await unstake(amount);
+    }
     setAmount("");
+  };
+
+  const claimRewards = async () => {
+    pendingAction.current = { kind: "claim" };
+    await claim();
   };
 
   const withdrawAll = () => {
@@ -233,11 +281,20 @@ export const KilnConsole: React.FC = () => {
           </div>
 
           <div className="mt-6 flex items-center gap-5">
-            <KilnOrb heat={stage.heat} simple className="w-24 shrink-0" />
+            <div className="relative w-24 shrink-0">
+              <motion.div animate={{ scale: previewing ? 0.9 + orbHeat * 0.2 : 1 }} transition={{ type: "spring", stiffness: 120, damping: 18 }}>
+                <KilnOrb heat={orbHeat} simple className="w-24" />
+              </motion.div>
+              <EmberBurst burstKey={burstKey} />
+            </div>
             <div className="min-w-0">
               <p className="font-display font-bold text-3xl tracking-tight">{stage.name}</p>
               <p className="text-[14px] text-bone-2">
-                {hasStaked ? `Firing for ${formatDuration(stakingDuration).toLowerCase()}` : "Nothing in the kiln yet"}
+                {previewing
+                  ? `Preview: ${(previewShare * 100).toFixed(2)}% of the kiln after this deposit`
+                  : hasStaked
+                    ? `Firing for ${formatDuration(stakingDuration).toLowerCase()}`
+                    : "Nothing in the kiln yet"}
               </p>
             </div>
           </div>
@@ -260,14 +317,14 @@ export const KilnConsole: React.FC = () => {
               {hasStaked && <span className="w-1.5 h-1.5 rounded-full bg-glow animate-pulse-dot" aria-hidden="true" />}
               ARGL ready to claim
             </p>
-            <p className="mt-2 font-display font-bold text-5xl tracking-[-0.04em] tnum text-heat break-all">
+            <p ref={rewardsRef} className="mt-2 font-display font-bold text-5xl tracking-[-0.04em] tnum text-heat break-all">
               {isConnected ? live.toFixed(5) : "0.00000"}
             </p>
             {hasStaked && <p className="mt-1 text-[12px] text-bone-3">Estimated between blocks from the reward rate; settles to the chain value on each read.</p>}
           </div>
 
           <div className="mt-auto pt-8 grid grid-cols-2 gap-2">
-            <button type="button" onClick={claim} disabled={!hasRewards || isWrongNetwork} className="btn btn-hot">
+            <button type="button" onClick={claimRewards} disabled={!hasRewards || isWrongNetwork} className="btn btn-hot">
               Claim ARGL
             </button>
             <button type="button" onClick={withdrawAll} disabled={!hasStaked} className="btn btn-ghost">
@@ -278,6 +335,7 @@ export const KilnConsole: React.FC = () => {
       </div>
 
       <TransactionModal state={txState} onClose={resetTxState} />
+      <EmberFlight flightKey={flightKey} fromRef={rewardsRef} targetSelector="[data-wallet-button]" />
       <WalletConnectModal isOpen={walletModalOpen} onClose={() => setWalletModalOpen(false)} />
     </div>
   );

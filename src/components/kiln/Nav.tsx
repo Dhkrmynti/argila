@@ -98,6 +98,7 @@ export const Nav: React.FC = () => {
             <button
               type="button"
               onClick={openWallet}
+              data-wallet-button
               className={`btn !h-10 sm:!h-11 !px-4 sm:!px-5 !text-[14px] ${isConnected && address ? "btn-ghost" : "btn-hot"}`}
             >
               {isConnected && address ? (

@@ -1,7 +1,7 @@
 import React from "react";
 
 // Same vessel as scripts/generate-argila-assets.cjs, inline so it can take the heat ramp.
-const VESSEL =
+export const VESSEL =
   "M35 10H65V15Q59.5 16 59.5 21.5V26C59.5 31 83 38.5 83 59C83 75 71.5 84.5 64 89H36C28.5 84.5 17 75 17 59C17 38.5 40.5 31 40.5 26V21.5Q40.5 16 35 15Z";
 
 export const VesselMark: React.FC<{ className?: string; id?: string }> = ({ className = "w-7 h-7", id = "vm" }) => (

@@ -20,6 +20,9 @@ const FRAG = `
 precision mediump float;
 uniform vec2 res;
 uniform float t;
+uniform float pulse;
+uniform float lean;
+uniform vec3 mouse;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
@@ -39,15 +42,20 @@ void main() {
   float aspect = res.x / res.y;
   vec2 p = vec2(uv.x * aspect * 2.2, uv.y * 2.0);
 
+  float d = distance(vec2(uv.x * aspect, uv.y), vec2(mouse.x * aspect, mouse.y));
+  float pull = exp(-d * 2.5) * mouse.z;
+  p.x -= (mouse.x - uv.x) * aspect * 2.2 * pull * 0.6 * lean * uv.y;
+
   // Domain warp, scrolling upward: the licking motion
   vec2 q = vec2(fbm(p + vec2(0.0, -t * 0.9)), fbm(p + vec2(5.2, -t * 1.1)));
   float n = fbm(p * 1.3 + q * 1.6 + vec2(0.0, -t * 1.6));
 
   // Hot at the floor, gone before the top; widest in the middle, fading at the sides
   float sides = smoothstep(0.0, 0.32, uv.x) * smoothstep(1.0, 0.68, uv.x);
-  float height = 0.36 + 0.3 * sides;
+  float height = 0.36 + 0.3 * sides + 0.12 * pulse;
   float f = (1.0 - uv.y / height) * 1.1 + (n - 0.55) * 1.1;
   f *= 0.35 + 0.65 * sides;
+  f += 0.15 * pulse + 0.18 * pull;
   f = clamp(f, 0.0, 1.0);
 
   vec3 ember = vec3(0.56, 0.18, 0.07);
@@ -65,8 +73,22 @@ void main() {
 }
 `;
 
-export const FireCanvas: React.FC<{ className?: string; scale?: number }> = ({ className = "", scale = 0.5 }) => {
+interface FireCanvasProps {
+  className?: string;
+  scale?: number;
+  pulseKey?: number | bigint;
+}
+
+export const FireCanvas: React.FC<FireCanvasProps> = ({ className = "", scale = 0.5, pulseKey }) => {
   const ref = useRef<HTMLCanvasElement>(null);
+  const pulseAt = useRef(Number.NEGATIVE_INFINITY);
+  const lastKey = useRef(pulseKey);
+
+  useEffect(() => {
+    if (pulseKey === lastKey.current) return;
+    lastKey.current = pulseKey;
+    pulseAt.current = performance.now();
+  }, [pulseKey]);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -106,8 +128,17 @@ export const FireCanvas: React.FC<{ className?: string; scale?: number }> = ({ c
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const uRes = gl.getUniformLocation(prog, "res");
     const uT = gl.getUniformLocation(prog, "t");
+    const uPulse = gl.getUniformLocation(prog, "pulse");
+    const uLean = gl.getUniformLocation(prog, "lean");
+    const uMouse = gl.getUniformLocation(prog, "mouse");
 
-    const speed = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0.4 : 1;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const speed = reduced ? 0.4 : 1;
+    const pulseAmp = reduced ? 0.5 : 1;
+    gl.uniform1f(uLean, reduced ? 0 : 1);
+
+    const target = { x: 0.5, y: 0.5, on: 0 };
+    const cur = { x: 0.5, y: 0.5, on: 0 };
     let visible = true;
     const start = performance.now();
 
@@ -121,6 +152,11 @@ export const FireCanvas: React.FC<{ className?: string; scale?: number }> = ({ c
 
     const draw = (time: number) => {
       gl.uniform1f(uT, ((time - start) / 1000) * speed);
+      gl.uniform1f(uPulse, Math.exp(-(performance.now() - pulseAt.current) / 350) * pulseAmp);
+      cur.x += (target.x - cur.x) * 0.08;
+      cur.y += (target.y - cur.y) * 0.08;
+      cur.on += (target.on - cur.on) * 0.08;
+      gl.uniform3f(uMouse, cur.x, cur.y, cur.on);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     const loop = (time: number) => {
@@ -139,11 +175,30 @@ export const FireCanvas: React.FC<{ className?: string; scale?: number }> = ({ c
       if (visible && !was) raf = requestAnimationFrame(loop);
     };
     const onResize = () => resize();
+    const onPointerMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      const r = canvas.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) return;
+      const x = (e.clientX - r.left) / r.width;
+      const y = 1 - (e.clientY - r.top) / r.height;
+      if (target.on === 0 && cur.on < 0.01) {
+        cur.x = x;
+        cur.y = y;
+      }
+      target.x = x;
+      target.y = y;
+      target.on = 1;
+    };
+    const onPointerLeave = () => {
+      target.on = 0;
+    };
 
     resize();
     io.observe(canvas);
     document.addEventListener("visibilitychange", onVis);
     window.addEventListener("resize", onResize);
+    window.addEventListener("pointermove", onPointerMove);
+    document.documentElement.addEventListener("pointerleave", onPointerLeave);
     raf = requestAnimationFrame(loop);
 
     return () => {
@@ -151,6 +206,8 @@ export const FireCanvas: React.FC<{ className?: string; scale?: number }> = ({ c
       io.disconnect();
       document.removeEventListener("visibilitychange", onVis);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointerMove);
+      document.documentElement.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("webglcontextlost", onLost);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
