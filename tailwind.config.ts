@@ -1,29 +1,29 @@
 import type { Config } from "tailwindcss";
 
-// Argila: kiln char field, bisque paper, terracotta fire, cobalt glaze for marks.
-const ink = {
-  DEFAULT: "#120E0B",
-  2: "#1B1612",
-  3: "#0B0806",
-  4: "#28201A",
+// Argila "Heat": a coal-dark studio lit by the kiln. The heat ramp runs
+// ember → terra → flame → glow → hot and is the only source of colour;
+// glaze is the single cool note, kept for the "cold" end of the scale.
+const coal = {
+  DEFAULT: "#0D0907",
+  2: "#151009",
+  3: "#1F1712",
+  4: "#2A2019",
 };
-const paper = {
-  DEFAULT: "#F4ECDF",
-  2: "#E9DDCA",
-  3: "#D8C8B0",
-  dim: "#BDAF9B",
-  faint: "#8D8172",
+const bone = {
+  DEFAULT: "#F6EDE3",
+  2: "#C2B2A3",
+  3: "#86766A",
 };
-const terra = {
-  DEFAULT: "#D2693C",
-  hi: "#EA9068",
-  deep: "#A84E2A",
-  dark: "#7A3720",
+const heat = {
+  ember: "#8E2D12",
+  terra: "#D9622B",
+  flame: "#F28C38",
+  glow: "#FFC56E",
+  hot: "#FFF0D4",
 };
-const cobalt = {
-  DEFAULT: "#3B5BA5",
-  hi: "#7D9BE0",
-  deep: "#26438A",
+const glaze = {
+  DEFAULT: "#8DB4C2",
+  deep: "#4E7A8A",
 };
 
 const config: Config = {
@@ -34,59 +34,56 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      spacing: {
-        "4.5": "1.125rem",
-        "13": "3.25rem",
-        "15": "3.75rem",
-      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        ink,
-        paper,
-        terra,
-        cobalt,
-        // Legacy names kept so untouched screens inherit the kiln palette.
-        clay: terra,
-        slip: ink,
-        buff: { DEFAULT: paper.DEFAULT, dim: paper.dim, faint: paper.faint },
-        miltos: { DEFAULT: cobalt.deep, hi: cobalt.hi },
-        ochre: terra.hi,
-      },
-      borderRadius: {
-        sm: "1px",
-        DEFAULT: "2px",
-        md: "2px",
-        lg: "2px",
-        xl: "2px",
-        "2xl": "3px",
-        "3xl": "3px",
+        coal,
+        bone,
+        ember: heat.ember,
+        terra: heat.terra,
+        flame: heat.flame,
+        glow: heat.glow,
+        hot: heat.hot,
+        glaze,
+        line: "rgba(255, 226, 196, 0.09)",
+        "line-strong": "rgba(255, 226, 196, 0.18)",
       },
       fontFamily: {
-        display: ["var(--font-archivo)", "Helvetica Neue", "sans-serif"],
-        sans: ["var(--font-archivo)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
-        mono: ["var(--font-martian)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-        code: ["var(--font-martian)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-        norse: ["var(--font-archivo)", "sans-serif"],
-        editorial: ["var(--font-archivo)", "sans-serif"],
-        cursive: ["var(--font-archivo)", "sans-serif"],
+        display: ["var(--font-bricolage)", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["var(--font-bricolage)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      },
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "2.5rem",
       },
       transitionTimingFunction: {
-        vault: "cubic-bezier(0.16, 1, 0.3, 1)",
+        out: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
       keyframes: {
-        fadeIn: {
-          "0%": { opacity: "0", transform: "translateY(12px)", filter: "blur(4px)" },
-          "100%": { opacity: "1", transform: "none", filter: "none" },
+        flicker: {
+          "0%, 100%": { opacity: "0.92", transform: "scale(1)" },
+          "35%": { opacity: "1", transform: "scale(1.025)" },
+          "60%": { opacity: "0.86", transform: "scale(0.99)" },
+        },
+        drift: {
+          "0%, 100%": { transform: "translate3d(0,0,0) scale(1)" },
+          "50%": { transform: "translate3d(2%, -3%, 0) scale(1.06)" },
+        },
+        pulseDot: {
+          "0%, 100%": { opacity: "0.35" },
+          "50%": { opacity: "1" },
         },
         marquee: {
-          "0%": { transform: "translateX(0%)" },
+          "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
       },
       animation: {
-        marquee: "marquee 60s linear infinite",
-        fadeIn: "fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both",
+        flicker: "flicker 3.2s ease-in-out infinite",
+        drift: "drift 14s ease-in-out infinite",
+        "pulse-dot": "pulseDot 1.6s ease-in-out infinite",
+        marquee: "marquee 40s linear infinite",
       },
     },
   },

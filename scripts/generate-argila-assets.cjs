@@ -7,11 +7,11 @@ const path = require("path");
 const PUB = path.join(__dirname, "..", "public");
 const APP = path.join(__dirname, "..", "src", "app");
 
-const INK = "#120E0B";
-const INK_2 = "#1B1612";
-const PAPER = "#F4ECDF";
-const PAPER_DIM = "#BDAF9B";
-const TERRA = "#D2693C";
+const INK = "#0D0907";
+const INK_2 = "#1F1712";
+const PAPER = "#F6EDE3";
+const PAPER_DIM = "#C2B2A3";
+const TERRA = "#F28C38";
 
 // The vessel: flared lip, narrow neck, full shoulder, a foot. Two glaze bands
 // are cut out of the body so it still reads at 16px.
@@ -47,8 +47,8 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width
   </g>
   <circle cx="600" cy="250" r="150" fill="${INK_2}"/>
   <g transform="translate(510 160) scale(1.8)"><path d="${VESSEL}" fill="${TERRA}" mask="url(#m)"/></g>
-  <text x="600" y="545" text-anchor="middle" fill="${PAPER}" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="78" letter-spacing="16">ARGILA</text>
-  <text x="600" y="592" text-anchor="middle" fill="${PAPER_DIM}" font-family="Consolas, Menlo, monospace" font-size="22">Staking on Robinhood Chain</text>
+  <text x="600" y="545" text-anchor="middle" fill="${PAPER}" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="96" letter-spacing="-3">argila</text>
+  <text x="600" y="592" text-anchor="middle" fill="${PAPER_DIM}" font-family="Consolas, Menlo, monospace" font-size="22">Patience, fired into value · Robinhood Chain</text>
 </svg>`;
 
 const png = (svg, out) => sharp(Buffer.from(svg)).png().toFile(out);

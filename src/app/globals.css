@@ -2,85 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Argila. Ink is the char of the kiln, paper the bisque, terra the fired clay,
-   cobalt the underglaze of the potter's mark and stamps. */
+/* Argila "Heat". Coal is the studio, bone the light it throws,
+   and the heat ramp (ember → terra → flame → glow → hot) the fire itself. */
 :root {
-  --ink: #120E0B;
-  --ink-2: #1B1612;
-  --ink-3: #0B0806;
-  --ink-4: #28201A;
-  --paper: #F4ECDF;
-  --paper-2: #E9DDCA;
-  --paper-dim: #BDAF9B;
-  --paper-faint: #8D8172;
-  --terra: #D2693C;
-  --terra-hi: #EA9068;
-  --terra-deep: #A84E2A;
-  --cobalt: #3B5BA5;
-  --cobalt-deep: #26438A;
+  --coal: #0D0907;
+  --coal-2: #151009;
+  --coal-3: #1F1712;
+  --bone: #F6EDE3;
+  --bone-2: #C2B2A3;
+  --ember: #8E2D12;
+  --terra: #D9622B;
+  --flame: #F28C38;
+  --glow: #FFC56E;
+  --hot: #FFF0D4;
+  --line: rgba(255, 226, 196, 0.09);
 
-  --background: var(--ink);
-  --foreground: var(--paper);
-
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Engraved line-work, drawn in currentColor through masks */
-  --wave-band: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='16' viewBox='0 0 40 16' fill='none' stroke='black' stroke-width='0.9'%3E%3Cpath d='M0 8C10 0 10 0 20 8S30 16 40 8'/%3E%3Cpath d='M0 8C10 16 10 16 20 8S30 0 40 8'/%3E%3Cpath d='M0 3C10 -2 10 -2 20 3S30 8 40 3' opacity='.55'/%3E%3Cpath d='M0 13C10 18 10 18 20 13S30 8 40 13' opacity='.55'/%3E%3C/svg%3E");
-  --tint-a: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='9' viewBox='0 0 64 9' fill='none' stroke='black' stroke-width='0.6'%3E%3Cpath d='M0 4.5C8 0.5 24 0.5 32 4.5S56 8.5 64 4.5'/%3E%3C/svg%3E");
-  --tint-b: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='13' viewBox='0 0 46 13' fill='none' stroke='black' stroke-width='0.5'%3E%3Cpath d='M0 6.5C6 12 17 12 23 6.5S40 1 46 6.5'/%3E%3C/svg%3E");
+  --heat-ramp: linear-gradient(90deg, #8E2D12 0%, #D9622B 30%, #F28C38 55%, #FFC56E 80%, #FFF0D4 100%);
+  --background: var(--coal);
+  --foreground: var(--bone);
 }
 
 html {
-  background: var(--ink);
+  background: var(--coal);
   color-scheme: dark;
-  scrollbar-color: var(--terra-deep) var(--ink-3);
+  scrollbar-color: #3A2B21 var(--coal);
 }
 
 body {
-  color: var(--paper);
-  background: var(--ink);
-  font-family: var(--font-archivo), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-variant-numeric: lining-nums;
+  color: var(--bone);
+  background: var(--coal);
+  font-family: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--ink-3);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--terra-deep);
-  border: 3px solid var(--ink-3);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--terra);
-}
-
 ::selection {
-  background: var(--terra);
-  color: var(--ink);
+  background: var(--flame);
+  color: var(--coal);
 }
 
 :focus-visible {
-  outline: 1.5px solid var(--terra-hi);
+  outline: 2px solid var(--glow);
   outline-offset: 3px;
-}
-.on-paper :focus-visible {
-  outline-color: var(--ink);
-}
-
-input,
-textarea {
-  caret-color: var(--terra-hi);
-}
-.on-paper input {
-  caret-color: var(--cobalt-deep);
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -92,252 +57,135 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-a {
-  text-underline-offset: 0.22em;
-  text-decoration-thickness: 1px;
-}
-
-/* Archivo opened to its expanded width: the banknote's lettering */
-.font-display {
-  font-variation-settings: "wdth" 125;
-  letter-spacing: -0.015em;
-}
-.wide {
-  font-variation-settings: "wdth" 112;
-}
-
 @layer utilities {
   .tnum {
-    font-variant-numeric: tabular-nums lining-nums;
+    font-variant-numeric: tabular-nums;
   }
-
   .text-balance {
     text-wrap: balance;
   }
-
-  /* Interlaced wave band: the border of every engraved note */
-  .band-wave {
-    height: 16px;
-    background-color: currentColor;
-    -webkit-mask: var(--wave-band) repeat-x left center;
-    mask: var(--wave-band) repeat-x left center;
+  .text-pretty {
+    text-wrap: pretty;
   }
 
-  /* Security tint: two wave fields at different periods, read as moiré */
-  .tint {
+  /* Text filled with the heat ramp */
+  .text-heat {
+    background: var(--heat-ramp);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-heat {
+    background: var(--heat-ramp);
+  }
+
+  /* Surfaces: fired slabs on the studio floor */
+  .surface {
+    background: linear-gradient(180deg, rgba(255, 226, 196, 0.035), rgba(255, 226, 196, 0.012));
+    border: 1px solid var(--line);
+    border-radius: 1.75rem;
+  }
+  .surface-raised {
+    background: linear-gradient(180deg, #1F1712, #171009);
+    border: 1px solid rgba(255, 226, 196, 0.11);
+    border-radius: 1.75rem;
+    box-shadow: 0 1px 0 rgba(255, 240, 212, 0.06) inset, 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+  }
+  /* A slab with the kiln's glow coming through its rim */
+  .surface-hot {
     position: relative;
+    background: radial-gradient(120% 90% at 50% 0%, rgba(242, 140, 56, 0.16), transparent 60%), #171009;
+    border-radius: 1.75rem;
     isolation: isolate;
   }
-  .tint::before,
-  .tint::after {
+  .surface-hot::before {
     content: "";
     position: absolute;
     inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(160deg, rgba(255, 197, 110, 0.55), rgba(217, 98, 43, 0.25) 40%, rgba(255, 226, 196, 0.06) 75%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
     z-index: -1;
-    pointer-events: none;
-    background-color: var(--tint-color, var(--ink));
-  }
-  .tint::before {
-    opacity: var(--tint-a-opacity, 0.07);
-    -webkit-mask: var(--tint-a) repeat;
-    mask: var(--tint-a) repeat;
-  }
-  .tint::after {
-    opacity: var(--tint-b-opacity, 0.05);
-    -webkit-mask: var(--tint-b) repeat;
-    mask: var(--tint-b) repeat;
   }
 
-  /* Perforation: the tear line of a firing log or a kiln ticket */
-  .perf-x {
-    height: 10px;
-    background: radial-gradient(circle at 5px 5px, var(--perf-hole, var(--ink)) 2.6px, transparent 3.1px) left center / 13px 10px repeat-x;
-  }
-  .perf-y {
-    width: 10px;
-    background: radial-gradient(circle at 5px 5px, var(--perf-hole, var(--ink)) 2.6px, transparent 3.1px) center top / 10px 13px repeat-y;
-  }
-
-  /* Paper stock: tinted mint with a faint deckle of shadow */
-  .paper {
-    background-color: var(--paper);
-    color: var(--ink);
-    --tint-color: var(--ink);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 30px 60px -30px rgba(0, 0, 0, 0.65), 0 8px 18px -10px rgba(0, 0, 0, 0.45);
-  }
-
-  /* Double hairline frame, as on a certificate */
-  .frame-double {
-    position: relative;
-  }
-  .frame-double::after {
-    content: "";
-    position: absolute;
-    inset: 6px;
-    pointer-events: none;
-    border: 1px solid currentColor;
-    opacity: 0.28;
-    outline: 1px solid currentColor;
-    outline-offset: 3px;
-  }
-
-  /* Buttons. Paper notes on the ink field; ink on paper panels. */
+  /* Buttons */
   .btn {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
-    height: 3.25rem;
-    padding: 0 1.6rem;
-    font-weight: 650;
+    gap: 0.55rem;
+    height: 3rem;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
     font-size: 15px;
-    letter-spacing: 0.01em;
-    font-variation-settings: "wdth" 112;
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
-    overflow: hidden;
-    isolation: isolate;
-    transition: color 0.35s var(--ease-out), background-color 0.35s var(--ease-out), border-color 0.35s var(--ease-out),
-      transform 0.2s var(--ease-out);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s, color 0.3s, border-color 0.3s,
+      box-shadow 0.4s, opacity 0.3s;
   }
   .btn:active:not(:disabled) {
-    transform: scale(0.985);
+    transform: scale(0.97);
   }
   .btn:disabled {
     cursor: not-allowed;
-    opacity: 0.38;
+    opacity: 0.4;
   }
-  /* The fill wipes in from the left like ink taking to paper */
-  .btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: var(--btn-wipe);
-    transform: scaleX(0);
-    transform-origin: right center;
-    transition: transform 0.5s var(--ease-out);
+  .btn-hot {
+    color: #1A0E07;
+    background: linear-gradient(180deg, #FFD08A, #F28C38 55%, #D9622B);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 10px 30px -10px rgba(242, 140, 56, 0.7);
   }
-  .btn:hover:not(:disabled)::before,
-  .btn:focus-visible::before {
-    transform: scaleX(1);
-    transform-origin: left center;
+  .btn-hot:hover:not(:disabled) {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 14px 44px -8px rgba(255, 175, 90, 0.85);
+    transform: translateY(-1px);
   }
-
-  .btn-paper {
-    background: var(--paper);
-    color: var(--ink);
-    --btn-wipe: var(--terra-hi);
+  .btn-ghost {
+    color: var(--bone);
+    border: 1px solid rgba(255, 226, 196, 0.18);
+    background: rgba(255, 226, 196, 0.02);
   }
-  .btn-line {
-    color: var(--paper);
-    border: 1px solid rgba(210,105,60, 0.55);
-    --btn-wipe: rgba(210,105,60, 0.16);
+  .btn-ghost:hover:not(:disabled) {
+    border-color: rgba(255, 197, 110, 0.55);
+    background: rgba(255, 197, 110, 0.06);
   }
-  .btn-line:hover:not(:disabled) {
-    border-color: var(--terra-hi);
+  .btn-bone {
+    color: var(--coal);
+    background: var(--bone);
   }
-  .btn-ink {
-    background: var(--ink);
-    color: var(--paper);
-    --btn-wipe: var(--ink-4);
-  }
-  .btn-cobalt {
-    background: var(--cobalt-deep);
-    color: var(--paper);
-    --btn-wipe: var(--cobalt);
-  }
-  .btn-terra {
-    background: var(--terra-deep);
-    color: var(--paper);
-    --btn-wipe: var(--terra);
-  }
-  .btn-outline-ink {
-    color: var(--ink);
-    border: 1px solid rgba(18,14,11, 0.45);
-    --btn-wipe: rgba(18,14,11, 0.08);
-  }
-  .btn-outline-ink:hover:not(:disabled) {
-    border-color: var(--ink);
+  .btn-bone:hover:not(:disabled) {
+    background: var(--hot);
+    transform: translateY(-1px);
   }
 
-  /* Ruled ledger rows */
-  .ledger > * + * {
-    border-top: 1px solid var(--rule, rgba(244,236,223, 0.12));
+  /* Small mono label used above figures */
+  .eyebrow {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bone-2);
   }
 
-  /* Engraving: an SVG path drawing itself */
-  .engrave {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: engrave var(--engrave-dur, 2.2s) var(--ease-out) var(--engrave-delay, 0s) forwards;
-  }
-  .spin-slow {
-    transform-box: view-box;
-    transform-origin: 50% 50%;
-    animation: spin var(--spin-dur, 160s) linear infinite;
-  }
-  .spin-slow-rev {
-    transform-box: view-box;
-    transform-origin: 50% 50%;
-    animation: spin var(--spin-dur, 200s) linear infinite reverse;
+  /* Film grain over the whole studio, so flat coal never reads as a screen */
+  .grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.9 0 0 0 0 0.8 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .engrave {
-      animation: none;
-      stroke-dashoffset: 0;
-    }
-    .spin-slow,
-    .spin-slow-rev {
-      animation: none;
-    }
-    .btn::before {
-      transition: none;
+    .animate-flicker,
+    .animate-drift,
+    .animate-pulse-dot,
+    .animate-marquee {
+      animation: none !important;
     }
   }
 }
 
-@keyframes engrave {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes tick {
-  0%,
-  100% {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-.tick-dot {
-  animation: tick 1.4s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .tick-dot {
-    animation: none;
-    opacity: 1;
-  }
-}
-
-html[data-vault-seen="1"] .vault-door {
-  display: none;
-}
-
-/* Printed grain over the whole room */
-.vault-grain {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 220px 220px;
-}

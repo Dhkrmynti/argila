@@ -1,5 +1,5 @@
-import { LandingContainer } from "@/components/landing/LandingContainer";
+import { Home } from "@/components/home/Home";
 
-export default function Home() {
-  return <LandingContainer />;
+export default function Page() {
+  return <Home />;
 }

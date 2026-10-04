@@ -2,36 +2,38 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { protocolConfig } from "@/lib/blockchain/config";
 import { AlertTriangle } from "lucide-react";
+import { protocolConfig } from "@/lib/blockchain/config";
 
 interface WrongNetworkBannerProps {
   onSwitch: () => void;
 }
 
-export const WrongNetworkBanner: React.FC<WrongNetworkBannerProps> = ({ onSwitch }) => {
-  return (
-    <motion.div
-      role="alert"
-      initial={{ opacity: 0, y: -12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full border border-terra/60 bg-terra-deep/15 text-paper"
-    >
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-5 py-4">
-        <div className="flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 mt-0.5 shrink-0 text-terra-hi" />
-          <div>
-            <p className="font-display font-bold">Wrong network</p>
-            <p className="text-[14px] text-paper-dim">
-              Switch your wallet to {protocolConfig.chainName} ({protocolConfig.chainId}) to deposit, claim or withdraw.
-            </p>
-          </div>
+export const WrongNetworkBanner: React.FC<WrongNetworkBannerProps> = ({ onSwitch }) => (
+  <motion.div
+    role="alert"
+    initial={{ opacity: 0, y: -12 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    className="w-full rounded-3xl border border-flame/40 bg-flame/[0.08] text-bone"
+  >
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-5 sm:px-6 py-4">
+      <div className="flex items-start gap-3">
+        <span className="grid place-items-center w-9 h-9 rounded-full bg-flame/15 shrink-0">
+          <AlertTriangle className="w-[18px] h-[18px] text-glow" />
+        </span>
+        <div>
+          <p className="font-display font-semibold">Wrong network</p>
+          <p className="text-[14px] text-bone-2">
+            Switch your wallet to {protocolConfig.chainName} ({protocolConfig.chainId}) to deposit, claim or withdraw.
+          </p>
         </div>
-        <button type="button" onClick={onSwitch} className="btn btn-terra shrink-0 !h-11">
-          Switch network
-        </button>
       </div>
-    </motion.div>
-  );
-};
+      <button type="button" onClick={onSwitch} className="btn btn-hot shrink-0 !h-11">
+        Switch network
+      </button>
+    </div>
+  </motion.div>
+);
+
+export default WrongNetworkBanner;

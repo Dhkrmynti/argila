@@ -1,28 +1,25 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
-import { Navbar } from "@/components/Navigation/Navbar";
-import { Footer } from "@/components/Navigation/Footer";
-import { VaultBackdrop } from "@/components/vault/VaultBackdrop";
-import { ScrollChoreography } from "@/components/vault/ScrollChoreography";
+import { Nav } from "@/components/kiln/Nav";
+import { Footer } from "@/components/kiln/Footer";
+import { Backdrop } from "@/components/kiln/Backdrop";
 import localFont from "next/font/local";
 
 // Self-hosted so the site never depends on reaching Google Fonts at build or run time
-const archivo = localFont({
-  src: "../fonts/Archivo-Variable-latin.woff2",
-  weight: "100 900",
+const bricolage = localFont({
+  src: "../fonts/BricolageGrotesque-Variable-latin.woff2",
+  weight: "200 800",
   style: "normal",
-  declarations: [{ prop: "font-stretch", value: "62% 125%" }],
-  variable: "--font-archivo",
+  variable: "--font-bricolage",
   display: "swap",
 });
 
-const martian = localFont({
-  src: "../fonts/MartianMono-Variable-latin.woff2",
-  weight: "100 800",
+const geistMono = localFont({
+  src: "../fonts/GeistMono-Variable-latin.woff2",
+  weight: "100 900",
   style: "normal",
-  declarations: [{ prop: "font-stretch", value: "75% 112.5%" }],
-  variable: "--font-martian",
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
@@ -30,7 +27,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#120E0B",
+  themeColor: "#0D0907",
 };
 
 export const metadata: Metadata = {
@@ -78,18 +75,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${archivo.variable} ${martian.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${bricolage.variable} ${geistMono.variable}`}>
       <head>
         <link rel="icon" href="/argila-icon-32.png" type="image/png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/argila-apple-touch.png" />
       </head>
-      <body className="bg-ink text-paper font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+      <body className="bg-coal text-bone font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden">
         <Providers>
-          <VaultBackdrop />
-          <Navbar />
+          <Backdrop />
+          <Nav />
           <main className="flex-1 relative z-10">{children}</main>
           <Footer />
-          <ScrollChoreography />
         </Providers>
       </body>
     </html>

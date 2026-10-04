@@ -1,15 +1,10 @@
-import { StakingDashboard } from "@/components/Staking/StakingDashboard";
+import { KilnConsole } from "@/components/console/KilnConsole";
 
 export const metadata = {
-  title: "Deposit USDG — Argila",
-  description:
-    "Deposit USDG into Argila on Robinhood Chain and collect ARGL every block. No lockup, withdraw any time.",
+  title: "The kiln — Argila",
+  description: "Stake USDG in Argila on Robinhood Chain and earn ARGL every block. No lockup, no fees, withdraw any time.",
 };
 
 export default function StakePage() {
-  return (
-    <div className="relative min-h-screen pt-16 sm:pt-[76px] text-paper">
-      <StakingDashboard />
-    </div>
-  );
+  return <KilnConsole />;
 }
