@@ -5,17 +5,17 @@ export async function GET() {
   try {
     // Read contract state or cached stats
     const stats = {
-      protocol: "Aegis",
+      protocol: "Argila",
       chain: protocolConfig.chainName,
       chainId: protocolConfig.chainId,
       stakeAsset: "USDG",
-      rewardAsset: "AEGIS",
+      rewardAsset: "ARGL",
       gasAsset: "ETH",
       tvlUsd: null, // As specified in section 19: "$— instead of fake numbers"
       totalStaked: "0.00",
       totalUsdStaked: "0.00",
       totalRewardsDistributed: "0.00",
-      totalAegisDistributed: "0.00",
+      totalArgilaDistributed: "0.00",
       totalKawaDistributed: "0.00",
       totalStakers: 0,
       rewardRate: null,

@@ -1,29 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { useLayer5Staking } from "@/lib/hooks/useLayer5Staking";
 import { useBlockNumber } from "wagmi";
 import { formatTokenAmount, formatApy } from "@/lib/utils/formatters";
 import { protocolConfig } from "@/lib/blockchain/config";
-import {
-  ShieldCheck,
-  Copy,
-  Check,
-  ExternalLink,
-  Activity,
-  TrendingUp,
-  Zap,
-  Lock,
-  Layers,
-  Cpu,
-  Coins,
-  Clock,
-  ArrowUpRight,
-  Radio,
-} from "lucide-react";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import { Copy, Check, ExternalLink } from "lucide-react";
+import { RollingNumber } from "@/components/vault/RollingNumber";
+import { MicrMark } from "@/components/vault/Guilloche";
 
 interface ApiStatsResponse {
   tvlUsd: string | null;
@@ -32,6 +17,8 @@ interface ApiStatsResponse {
   totalStakers: number;
   currentApy: number | null;
 }
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export const StatsViewer: React.FC = () => {
   const { totalStaked, totalStakers, calculatedApy, stakeDecimals } = useLayer5Staking();
@@ -66,8 +53,8 @@ export const StatsViewer: React.FC = () => {
 
   const rewardsDistributedFormatted =
     apiStats?.totalRewardsDistributed && apiStats.totalRewardsDistributed !== "0.00"
-      ? `${apiStats.totalRewardsDistributed} AEGIS`
-      : "0.00 AEGIS";
+      ? `${apiStats.totalRewardsDistributed} ARGL`
+      : "0.00 ARGL";
 
   const stakersCount =
     totalStakers > 0
@@ -76,266 +63,181 @@ export const StatsViewer: React.FC = () => {
       ? apiStats.totalStakers.toLocaleString()
       : "0";
 
-  const apyDisplay = formatApy(calculatedApy ?? (apiStats?.currentApy ?? 0));
+  const apyRaw = calculatedApy ?? (apiStats?.currentApy ?? 0);
+  // An unread or unset rate is shown as unknown, never as a 0% figure
+  const apyDisplay = apyRaw > 0 ? formatApy(apyRaw) : "—";
 
   // Timeframe live data
   const timeframeMetrics = {
-    "24H": { volume: "$0.00 USDG", rewards: "0.00 AEGIS", txCount: "0", avgGas: "< 0.0001 ETH" },
-    "7D": { volume: "$0.00 USDG", rewards: "0.00 AEGIS", txCount: "0", avgGas: "< 0.0001 ETH" },
-    "30D": { volume: "$0.00 USDG", rewards: "0.00 AEGIS", txCount: "0", avgGas: "< 0.0001 ETH" },
+    "24H": { volume: "$0.00 USDG", rewards: "0.00 ARGL", txCount: "0", avgGas: "< 0.0001 ETH" },
+    "7D": { volume: "$0.00 USDG", rewards: "0.00 ARGL", txCount: "0", avgGas: "< 0.0001 ETH" },
+    "30D": { volume: "$0.00 USDG", rewards: "0.00 ARGL", txCount: "0", avgGas: "< 0.0001 ETH" },
     "ALL": { volume: stakedFormatted, rewards: rewardsDistributedFormatted, txCount: "0", avgGas: "< 0.0001 ETH" },
   }[timeframe];
 
+  const split = (s: string) => {
+    const i = s.lastIndexOf(" ");
+    return i > 0 ? [s.slice(0, i), s.slice(i + 1)] : [s, ""];
+  };
+
+  const headline = [
+    { k: "In the kiln", v: stakedFormatted, roll: true },
+    { k: "Estimated APY", v: apyDisplay },
+    { k: "ARGL paid out", v: rewardsDistributedFormatted, roll: true },
+    { k: "Account holders", v: stakersCount, roll: true },
+  ];
+
   return (
-    <div className="w-full space-y-8 font-sans text-left text-[#1C1B18]">
-      {/* 1. Live Protocol Status Marquee / Telemetry Ribbon */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl p-3 sm:px-5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono border border-black/[0.08] shadow-sm"
+    <div className="w-full text-left text-paper">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end pb-10 border-b border-terra/25">
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease }}
+          className="lg:col-span-7 font-display font-extrabold text-[2.6rem] sm:text-6xl lg:text-[4.6rem] leading-[0.95]"
+        >
+          Kiln report.
+        </motion.h1>
+        <p className="lg:col-span-5 text-lg leading-relaxed text-paper-dim">
+          What the kiln holds and has paid, read from the staking contract and the indexer as you watch.
+        </p>
+      </div>
+
+      {/* Headline figures, printed as the kiln's statement */}
+      <motion.section
+        initial={{ opacity: 0, y: 40, rotate: -0.8 }}
+        animate={{ opacity: 1, y: 0, rotate: 0 }}
+        transition={{ duration: 1, ease, delay: 0.12 }}
+        className="mt-12 paper tint on-paper"
       >
-        <div className="flex items-center gap-3">
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#283615] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#283615]" />
-          </span>
-          <span className="text-[#1C1B18] font-bold">ROBINHOOD CHAIN MAINNET TELEMETRY</span>
-          <span className="text-black/20 hidden sm:inline">•</span>
-          <span className="text-[#6B665E] hidden sm:inline">
-            BLOCK #<span className="text-[#1C1B18] font-mono font-bold">{liveBlock}</span>
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4 text-[#6B665E]">
-          <span className="flex items-center gap-1.5">
-            <Cpu className="w-3.5 h-3.5 text-[#283615]" /> 100% HEALTH
-          </span>
-          <span className="text-black/10">•</span>
-          <span className="text-[#283615] font-bold">SYNTHETIX O(1) ENGINE</span>
-        </div>
-      </motion.div>
-
-      {/* 2. Warm Paper Editorial Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/[0.08] pb-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-[#6B665E] uppercase">
-              04 // PROTOCOL ANALYTICS
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#283615]" />
-            <span className="font-cursive text-[#283615] text-lg tracking-normal lowercase">
-              ~ verifiable cryptographic metrics ~
+        <div className="perf-x mx-3 [--perf-hole:var(--ink)]" aria-hidden="true" />
+        <div className="px-5 sm:px-10 pt-6 pb-8">
+          <div className="flex items-start justify-between gap-6 pb-4 border-b-2 border-ink">
+            <div>
+              <h2 className="font-display font-extrabold text-2xl sm:text-3xl leading-none">Kiln report</h2>
+              <p className="mt-2 font-mono text-[11px] text-ink/60 tnum">
+                Robinhood Chain · block #{liveBlock.toLocaleString()}
+              </p>
+            </div>
+            <span className="hidden sm:flex items-center gap-2 font-mono text-[11px] text-ink/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-cobalt-deep tick-dot" aria-hidden="true" />
+              read live
             </span>
           </div>
-
-          <h1 className="font-display font-black text-2xl sm:text-4xl lg:text-5xl tracking-tight text-[#1C1B18] uppercase leading-tight">
-            GLOBAL <span className="text-[#283615]">STATISTICS</span>
-          </h1>
-
-          <p className="text-xs sm:text-sm font-sans tracking-normal text-[#6B665E] max-w-xl leading-relaxed">
-            Real-time on-chain capital telemetry, invariant solvency verification, and cumulative emission tracking on Robinhood Chain.
-          </p>
+          <dl className="ledger [--rule:rgba(18,14,11,0.16)]">
+            {headline.map((m) => {
+              const [num, unit] = split(m.v);
+              return (
+                <div key={m.k} className="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-6 items-baseline py-5 sm:py-6">
+                  <dt className="sm:col-span-5 flex items-center gap-2 font-display font-bold text-[17px]">
+                    <MicrMark className="text-ink/50" kind="transit" />
+                    {m.k}
+                  </dt>
+                  <dd className="sm:col-span-7 sm:text-right font-display font-extrabold leading-none text-4xl sm:text-5xl break-words">
+                    {m.roll ? <RollingNumber value={num} /> : m.v}
+                    {m.roll && unit && <span className="ml-2 font-mono font-normal text-sm text-ink/55 align-middle">{unit}</span>}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
         </div>
+      </motion.section>
 
-        {/* Timeframe Selector */}
-        <div className="flex items-center gap-1.5 bg-[#FAF8F5] p-1 rounded-full border border-black/[0.08] shrink-0 shadow-sm">
-          {(["24H", "7D", "30D", "ALL"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTimeframe(t)}
-              className={`px-3.5 py-1.5 text-xs font-mono rounded-full font-bold transition-all duration-200 cursor-pointer ${
-                timeframe === t
-                  ? "bg-[#1C1B18] text-[#F6F3EC] shadow-sm"
-                  : "text-[#6B665E] hover:text-[#1C1B18]"
-              }`}
+      {/* Period ledger */}
+      <section className="mt-14">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <h2 data-reveal="lines" className="font-display font-bold text-2xl sm:text-3xl">By period</h2>
+          <div className="relative inline-flex border border-terra/40 p-1 self-start" role="tablist" aria-label="Period">
+            {(["24H", "7D", "30D", "ALL"] as const).map((t) => (
+              <button
+                key={t}
+                role="tab"
+                aria-selected={timeframe === t}
+                onClick={() => setTimeframe(t)}
+                className={`relative px-4 h-9 font-mono text-[12px] transition-colors cursor-pointer ${
+                  timeframe === t ? "text-ink" : "text-paper-dim hover:text-paper"
+                }`}
+              >
+                {timeframe === t && (
+                  <motion.span
+                    layoutId="period"
+                    transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                    className="absolute inset-0 bg-paper"
+                    aria-hidden="true"
+                  />
+                )}
+                <span className="relative">{t}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <dl className="mt-6 grid grid-cols-2 lg:grid-cols-4 border-y border-terra/25">
+          {[
+            ["Volume", timeframeMetrics.volume, false],
+            ["Rewards generated", timeframeMetrics.rewards, true],
+            ["Transactions", timeframeMetrics.txCount, false],
+            ["Average gas", timeframeMetrics.avgGas, false],
+          ].map(([k, v, hi], i) => (
+            <div
+              key={k as string}
+              className={`py-6 min-w-0 ${i % 2 === 1 ? "pl-5 border-l border-terra/20" : ""} ${
+                i >= 2 ? "border-t lg:border-t-0 border-terra/20" : ""
+              } ${i === 2 ? "lg:pl-5 lg:border-l" : ""}`}
             >
-              {t}
-            </button>
+              <dt className="font-mono text-[11px] text-paper-faint">{k}</dt>
+              <dd className={`mt-2 font-mono text-base sm:text-lg truncate tnum ${hi ? "text-terra-hi" : ""}`}>{v}</dd>
+            </div>
           ))}
-        </div>
-      </div>
+        </dl>
+      </section>
 
-      {/* 3. Top 4-Metric Institutional KPI Ribbon */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        {/* Metric 1: Total Staked */}
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-6 space-y-2 sm:space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[#6B665E] uppercase">
-                TOTAL ASSETS
-              </span>
-              <div className="p-1.5 sm:p-2 rounded-xl bg-[#FAF8F5] border border-black/[0.08]">
-                <Coins className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#283615]" />
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-lg sm:text-2xl font-bold text-[#1C1B18] tracking-tight truncate">
-                {stakedFormatted}
-              </div>
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-1.5">
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#283615] bg-[#283615]/10 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
-                  <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#283615]" /> Solvency
-                </span>
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#6B665E] hidden sm:inline">Principal Backed</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Metric 2: APY */}
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-6 space-y-2 sm:space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[#6B665E] uppercase">
-                REWARD APY
-              </span>
-              <div className="p-1.5 sm:p-2 rounded-xl bg-[#FAF8F5] border border-black/[0.08]">
-                <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#283615]" />
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-lg sm:text-2xl font-bold text-[#283615] tracking-tight truncate">
-                {apyDisplay}
-              </div>
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-1.5">
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#1C1B18] bg-black/5 px-1.5 py-0.5 rounded font-semibold">
-                  Per Block
-                </span>
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#6B665E] hidden sm:inline">Continuous</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Metric 3: Harvested */}
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-6 space-y-2 sm:space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[#6B665E] uppercase">
-                HARVESTED
-              </span>
-              <div className="p-1.5 sm:p-2 rounded-xl bg-[#FAF8F5] border border-black/[0.08]">
-                <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#283615]" />
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-lg sm:text-2xl font-bold text-[#1C1B18] tracking-tight truncate">
-                {rewardsDistributedFormatted}
-              </div>
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-1.5">
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#283615] bg-[#283615]/10 px-1.5 py-0.5 rounded font-bold">
-                  Non-Dilutive
-                </span>
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#6B665E] hidden sm:inline">Zero Slashing</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Metric 4: Active Positions */}
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-6 space-y-2 sm:space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[#6B665E] uppercase">
-                PARTICIPANTS
-              </span>
-              <div className="p-1.5 sm:p-2 rounded-xl bg-[#FAF8F5] border border-black/[0.08]">
-                <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#283615]" />
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-lg sm:text-2xl font-bold text-[#1C1B18] tracking-tight truncate">
-                {stakersCount}
-              </div>
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-1.5">
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#283615] bg-[#283615]/10 px-1.5 py-0.5 rounded font-bold">
-                  Live On-Chain
-                </span>
-                <span className="text-[9px] sm:text-[10px] font-mono text-[#6B665E] hidden sm:inline">Unique Addrs</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Timeframe Analytic Summary Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl liquid-glass-card border border-black/[0.08] bg-white font-mono text-xs">
-        <div>
-          <span className="text-[#6B665E] text-[10px] uppercase block tracking-wider">PERIOD VOLUME</span>
-          <span className="text-[#1C1B18] font-bold text-sm sm:text-base">{timeframeMetrics.volume}</span>
-        </div>
-        <div>
-          <span className="text-[#6B665E] text-[10px] uppercase block tracking-wider">REWARDS GENERATED</span>
-          <span className="text-[#283615] font-bold text-sm sm:text-base">{timeframeMetrics.rewards}</span>
-        </div>
-        <div>
-          <span className="text-[#6B665E] text-[10px] uppercase block tracking-wider">TRANSACTION COUNT</span>
-          <span className="text-[#1C1B18] font-bold text-sm sm:text-base">{timeframeMetrics.txCount}</span>
-        </div>
-        <div>
-          <span className="text-[#6B665E] text-[10px] uppercase block tracking-wider">AVERAGE GAS COST</span>
-          <span className="text-[#1C1B18] font-bold text-sm sm:text-base">{timeframeMetrics.avgGas}</span>
-        </div>
-      </div>
-
-      {/* 5. Cryptographic Smart Contract Transparency Section */}
-      <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 space-y-6 bg-white border border-black/[0.08]">
-        <div className="flex items-center justify-between border-b border-black/[0.08] pb-4">
-          <div className="space-y-1">
-            <h3 className="font-display font-black text-xl sm:text-2xl uppercase text-[#1C1B18] tracking-tight">
-              VERIFIABLE PROTOCOL ARCHITECTURE
-            </h3>
-            <p className="text-xs font-mono text-[#6B665E]">
-              All smart contract bytecode is non-upgradable, audited, and deployed immutably on Robinhood Chain.
+      {/* Registered contracts, on paper */}
+      <section data-reveal="paper" className="mt-16 paper tint on-paper">
+        <div className="perf-x mx-3 [--perf-hole:var(--ink)]" aria-hidden="true" />
+        <div className="px-5 sm:px-9 pt-5 pb-8">
+          <div className="pb-4 border-b-2 border-ink">
+            <h2 className="font-display font-extrabold text-2xl sm:text-3xl leading-none">Registered contracts</h2>
+            <p className="mt-2 text-[15px] text-ink/70">
+              The contracts behind the kiln. Copy an address or inspect its source on the explorer.
             </p>
           </div>
-          <ShieldCheck className="w-6 h-6 text-[#283615]" />
+          <ul className="ledger [--rule:rgba(18,14,11,0.16)]">
+            {[
+              { id: "stake", label: "Staking contract", addr: protocolConfig.stakingContractAddress, note: "Holds deposits, pays rewards" },
+              { id: "usdg", label: "USDG token", addr: protocolConfig.stakeTokenAddress, note: "ERC-20 principal" },
+            ].map((row) => (
+              <li key={row.id} className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6 items-center py-5">
+                <div className="md:col-span-3">
+                  <p className="font-display font-bold">{row.label}</p>
+                  <p className="text-[13px] text-ink/60">{row.note}</p>
+                </div>
+                <p className="md:col-span-7 font-mono text-[12px] sm:text-[13px] break-all">{row.addr || "Pending deployment"}</p>
+                <div className="md:col-span-2 flex md:justify-end gap-2">
+                  <button
+                    onClick={() => copyToClipboard(row.addr, row.id)}
+                    className="grid place-items-center w-9 h-9 border border-ink/30 hover:border-ink hover:bg-ink hover:text-paper transition-colors cursor-pointer"
+                    aria-label={`Copy ${row.label} address`}
+                  >
+                    {copied === row.id ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                  {row.addr && (
+                    <a
+                      href={`${protocolConfig.explorerUrl}/address/${row.addr}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="grid place-items-center w-9 h-9 border border-ink/30 hover:border-ink hover:bg-ink hover:text-paper transition-colors"
+                      aria-label={`View ${row.label} on explorer`}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-          <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-black/[0.06] space-y-2">
-            <div className="flex items-center justify-between text-[#6B665E]">
-              <span>STAKING CONTRACT (Synthetix-grade)</span>
-              <button
-                onClick={() => copyToClipboard(protocolConfig.stakingContractAddress, "stake")}
-                className="hover:text-[#1C1B18] cursor-pointer"
-              >
-                {copied === "stake" ? <Check className="w-3.5 h-3.5 text-[#283615]" /> : <Copy className="w-3.5 h-3.5" />}
-              </button>
-            </div>
-            <div className="text-[#1C1B18] font-bold truncate">
-              {protocolConfig.stakingContractAddress || "Pending Deployment"}
-            </div>
-            <span className="text-[10px] text-[#283615] block font-semibold">
-              {protocolConfig.stakingContractAddress ? "Verified Bytecode" : "Awaiting Deployment"}
-            </span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-black/[0.06] space-y-2">
-            <div className="flex items-center justify-between text-[#6B665E]">
-              <span>USDG STAKING TOKEN</span>
-              <button
-                onClick={() => copyToClipboard(protocolConfig.stakeTokenAddress, "usdg")}
-                className="hover:text-[#1C1B18] cursor-pointer"
-              >
-                {copied === "usdg" ? <Check className="w-3.5 h-3.5 text-[#283615]" /> : <Copy className="w-3.5 h-3.5" />}
-              </button>
-            </div>
-            <div className="text-[#1C1B18] font-bold truncate">
-              {protocolConfig.stakeTokenAddress}
-            </div>
-            <span className="text-[10px] text-[#6B665E] block">ERC-20 Principal</span>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };

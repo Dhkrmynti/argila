@@ -14,8 +14,8 @@ export async function GET(
   // Transaction history array
   const transactions: Array<{
     id: string;
-    type: "STAKE_USDG" | "UNSTAKE_USDG" | "CLAIM_AEGIS" | "CLAIM_KAWA";
-    asset: "USDG" | "AEGIS" | "KAWA";
+    type: "STAKE_USDG" | "UNSTAKE_USDG" | "CLAIM_ARGL" | "CLAIM_KAWA";
+    asset: "USDG" | "ARGL" | "KAWA";
     amount: string;
     hash: string;
     timestamp: string;

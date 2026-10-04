@@ -34,7 +34,7 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: "Aegis",
+    appName: "Argila",
     projectId,
   }
 );

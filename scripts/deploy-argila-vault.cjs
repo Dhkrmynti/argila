@@ -5,19 +5,19 @@ const path = require("path");
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
   console.log("====================================================");
-  console.log("DEPLOYING NEW AEGIS STAKING VAULT");
+  console.log("DEPLOYING NEW ARGL STAKING VAULT");
   console.log("====================================================");
   console.log("Deployer Address:", deployer.address);
   const balance = await hre.ethers.provider.getBalance(deployer.address);
   console.log("Deployer Balance:", hre.ethers.formatEther(balance), "ETH");
 
   const stakingTokenAddress = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"; // Official USDG
-  const rewardTokenAddress = "0x072cbbe76b64851af9b527abdbf1ce0039b1f09d";  // Official $AEGIS (aegistak)
+  const rewardTokenAddress = "0x072cbbe76b64851af9b527abdbf1ce0039b1f09d";  // Earlier reward token (pre-ARGL)
 
   console.log("\nStaking Token (USDG):", stakingTokenAddress);
-  console.log("Reward Token ($AEGIS):", rewardTokenAddress);
+  console.log("Reward Token ($ARGL):", rewardTokenAddress);
 
-  // Initial reward rate: 0.0005 tokens per second (~43.2 AEGIS/day)
+  // Initial reward rate: 0.0005 tokens per second (~43.2 ARGL/day)
   const initialRewardRate = hre.ethers.parseUnits("0.0005", 18);
 
   console.log("\nDeploying Layer5Staking contract...");
@@ -88,7 +88,7 @@ async function main() {
   console.log("CONFIGURATION COMPLETE!");
   console.log("====================================================");
   console.log("Staking Vault CA:", stakingContractAddress);
-  console.log("Reward Token ($AEGIS) CA:", rewardTokenAddress);
+  console.log("Reward Token ($ARGL) CA:", rewardTokenAddress);
   console.log("Staking Asset (USDG) CA:", stakingTokenAddress);
   console.log("====================================================");
 }

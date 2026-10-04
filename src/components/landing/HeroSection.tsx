@@ -1,145 +1,139 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { motion, MotionValue } from "framer-motion";
-import { ArrowUpRight, CheckCircle2, ShieldCheck, TrendingUp } from "lucide-react";
-import { formatApy } from "@/lib/utils/formatters";
+import { motion, MotionValue, useTransform } from "framer-motion";
+import { gsap } from "gsap";
+import { ArrowUpRight } from "lucide-react";
+import { formatApy, formatTokenAmount } from "@/lib/utils/formatters";
+import { GuillocheRosette, MicrMark } from "@/components/vault/Guilloche";
+import { RollingNumber } from "@/components/vault/RollingNumber";
 
 interface HeroSectionProps {
   scrollProgress: MotionValue<number>;
   smoothProgress: MotionValue<number>;
   calculatedApy?: number;
+  totalStaked?: bigint;
+  stakeDecimals?: number;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
-  scrollProgress,
   smoothProgress,
   calculatedApy,
+  totalStaked,
+  stakeDecimals = 6,
 }) => {
+  const root = useRef<HTMLElement>(null);
+
+  // The wheel keeps turning as the visitor walks into the kiln
+  const dialRotate = useTransform(smoothProgress, [0, 0.3], [0, 70]);
+  const dialScale = useTransform(smoothProgress, [0, 0.3], [1, 1.12]);
+  const dialY = useTransform(smoothProgress, [0, 0.3], ["0%", "12%"]);
+
+  const apy = calculatedApy !== undefined && calculatedApy > 0 ? formatApy(calculatedApy) : null;
+  const deposits = totalStaked ? formatTokenAmount(totalStaked, stakeDecimals, 2) : "0.00";
+
+  // Opening sequence: rule, headline lines lifting out of their mask, body, actions, MICR line
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // A fresh page load already painted the server HTML: replaying it would flicker,
+    // unless the kiln door is covering the studio, in which case play as it opens.
+    const freshLoad = performance.now() < 4000 && !document.documentElement.dataset.argilaNavigated;
+    const doorShowing = document.documentElement.dataset.vaultSeen !== "1";
+    document.documentElement.dataset.argilaNavigated = "1";
+    if (freshLoad && !doorShowing) return;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" }, delay: doorShowing ? 0.75 : 0.15 });
+      tl.from("[data-h-rule]", { scaleX: 0, transformOrigin: "left center", duration: 1.1 })
+        .from("[data-h-line]", { yPercent: 110, duration: 1.15, stagger: 0.12 }, "<0.1")
+        .from("[data-h-body]", { opacity: 0, y: 18, filter: "blur(6px)", duration: 0.9 }, "<0.45")
+        .from("[data-h-cta] > *", { opacity: 0, y: 14, duration: 0.8, stagger: 0.08 }, "<0.15")
+        .from("[data-h-micr] > *", { opacity: 0, x: -12, duration: 0.7, stagger: 0.06 }, "<0.1");
+    }, root);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative min-h-[100dvh] w-full flex flex-col justify-between pt-32 sm:pt-36 lg:pt-40 pb-10 sm:pb-12 px-4 sm:px-8 lg:px-12 select-none overflow-hidden bg-[#F6F3EC]">
-      {/* Background Heroic Artwork - Inverted High-Key Classical Etching (100% Bright, Zero Dark Smudge) */}
-      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
-        <Image
-          src="/aegis-hero-bg.jpg"
-          alt="Aegis Ancient Greek Hero Background"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[center_32%] opacity-[0.20] mix-blend-multiply filter invert grayscale brightness-[1.25] contrast-[1.12]"
+    <section ref={root} data-recede className="relative w-full min-h-[100svh] flex flex-col text-paper overflow-hidden">
+
+      {/* The wheel. Positioned by the outer box; the inner one owns the scroll transforms. */}
+      <div
+        className="pointer-events-none absolute right-[-50vw] sm:right-[-24vw] lg:right-[-17vw] top-[88%] sm:top-[44%] -translate-y-1/2 opacity-35 sm:opacity-100 w-[115vw] sm:w-[80vw] lg:w-[min(56vw,54rem)] aspect-square"
+        aria-hidden="true"
+      >
+        <motion.div style={{ rotate: dialRotate, scale: dialScale, y: dialY }} className="absolute inset-0">
+          <GuillocheRosette engrave spin delay={0.1} className="absolute inset-0 w-full h-full text-terra" />
+          <div className="absolute inset-[34%] rounded-full bg-ink/85" />
+        </motion.div>
+        {/* The vessel stays upright while the wheel turns around it */}
+        <img
+          src="/argila-logo-terra.png"
+          alt=""
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%] h-[22%] object-contain"
         />
-        {/* Radial highlight to keep center text area completely luminous and clean */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(246,243,236,0.92)_20%,rgba(246,243,236,0.5)_65%,transparent_100%)]" />
       </div>
+      <div className="absolute inset-y-0 left-0 w-full lg:w-[60%] bg-gradient-to-r from-ink via-ink/85 to-transparent pointer-events-none" aria-hidden="true" />
 
-      {/* Ambient Warm Paper Lighting Fields */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] sm:w-[950px] h-[520px] bg-gradient-to-b from-[#EAE4D6]/70 via-[#E2DDD0]/40 to-transparent blur-[160px] rounded-full pointer-events-none -z-10" />
-
-      {/* Main Hero Content - Elevated with z-20 and high-contrast styling for perfect legibility */}
-      <div className="relative z-20 max-w-5xl mx-auto w-full text-center space-y-8 sm:space-y-10 my-auto py-6 sm:py-12">
-        {/* Main Headline */}
-        <div className="space-y-3">
-          <h1
-            className="font-display font-black text-5xl sm:text-7xl md:text-8xl lg:text-[7.25rem] xl:text-[8.25rem] leading-[0.95] tracking-tight uppercase text-[#0A0A08]"
-            style={{
-              textShadow: "0 0 24px rgba(246, 243, 236, 0.98), 0 0 45px rgba(246, 243, 236, 0.95), 0 2px 4px rgba(0, 0, 0, 0.15)",
-            }}
-          >
-            <span className="text-[#0A0A08] block">FLOW CAPITAL.</span>
-            <span className="text-[#1B3822] block">STREAM YIELD.</span>
+      <div className="relative z-10 flex-1 w-full max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 pt-28 sm:pt-32 pb-12 flex flex-col justify-center">
+        <div className="max-w-[52rem]">
+          <span data-h-rule className="block w-24 h-px bg-terra mb-8" aria-hidden="true" />
+          <h1 className="font-display font-extrabold leading-[0.96] text-[2.4rem] sm:text-[3.75rem] lg:text-[3.4rem] xl:text-[3.7rem]">
+            <span className="block overflow-hidden pb-[0.06em]">
+              <span data-h-line className="block">Your USDG,</span>
+            </span>
+            <span className="block overflow-hidden pb-[0.06em]">
+              <span data-h-line className="block">set in the kiln.</span>
+            </span>
+            <span className="block overflow-hidden pb-[0.06em]">
+              <span data-h-line className="block text-terra-hi">ARGL every block.</span>
+            </span>
           </h1>
-        </div>
 
-        {/* Narrative Description */}
-        <p
-          className="font-sans text-base sm:text-lg md:text-xl text-[#1C1B18] font-semibold leading-relaxed max-w-2xl mx-auto"
-          style={{
-            textShadow: "0 0 16px rgba(246, 243, 236, 0.98), 0 1px 3px rgba(246, 243, 236, 1)",
-          }}
-        >
-          Autonomous non-custodial staking infrastructure on Robinhood Chain. Deposit USDG and continuously stream cryptographic Aegis rewards every single block with zero lockup friction.
-        </p>
+          <p data-h-body className="mt-8 text-lg sm:text-xl leading-relaxed text-paper-dim max-w-[36rem]">
+            Argila is a staking protocol on Robinhood Chain. Set your USDG in the kiln, draw ARGL from every block it
+            fires, and take the whole piece back whenever you choose. No lockup, no cooling period.
+          </p>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5 pt-2">
-          <Link
-            href="/stake"
-            className="w-full sm:w-auto min-h-[56px] px-10 py-4 rounded-full bg-[#0A0A08] hover:bg-[#1B3822] text-[#FFFFFF] font-display text-sm sm:text-base font-black uppercase tracking-[0.16em] transition-all duration-300 shadow-[0_8px_24px_rgba(0,0,0,0.3)] hover:scale-[1.03] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer"
-          >
-            <span className="text-[#FFFFFF]">START STAKING NOW</span>
-            <ArrowUpRight className="w-5 h-5 text-[#FFFFFF]" />
-          </Link>
-
-          <Link
-            href="/position"
-            className="w-full sm:w-auto min-h-[56px] px-9 py-4 rounded-full bg-white hover:bg-[#FAF8F5] text-[#0A0A08] font-mono text-sm sm:text-base font-bold uppercase tracking-[0.12em] border-2 border-[#0A0A08] hover:border-black transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer"
-          >
-            <span>VIEW PORTFOLIO</span>
-          </Link>
-        </div>
-
-        {/* Live Telemetry Bar */}
-        <div className="pt-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 rounded-3xl bg-white/80 border border-black/[0.08] backdrop-blur-md max-w-4xl mx-auto font-mono text-left shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-            <div className="space-y-1 p-2">
-              <span className="text-[10px] text-[#6B665E] uppercase tracking-wider block">
-                STREAMING APY
-              </span>
-              <div className="text-base sm:text-lg font-bold text-[#283615] flex items-center gap-1.5">
-                <TrendingUp className="w-4 h-4 shrink-0 text-[#283615]" />
-                <span>
-                  {calculatedApy !== undefined && calculatedApy > 0
-                    ? formatApy(calculatedApy)
-                    : "DYNAMIC"}
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-1 p-2">
-              <span className="text-[10px] text-[#6B665E] uppercase tracking-wider block">
-                LOCKUP EPOCHS
-              </span>
-              <div className="text-base sm:text-lg font-bold text-[#1C1B18] flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>0 (INSTANT)</span>
-              </div>
-            </div>
-
-            <div className="space-y-1 p-2">
-              <span className="text-[10px] text-[#6B665E] uppercase tracking-wider block">
-                STAKE ASSET
-              </span>
-              <div className="text-base sm:text-lg font-bold text-[#1C1B18]">
-                USDG (6 DEC)
-              </div>
-            </div>
-
-            <div className="space-y-1 p-2">
-              <span className="text-[10px] text-[#6B665E] uppercase tracking-wider block">
-                SECURITY
-              </span>
-              <div className="text-base sm:text-lg font-bold text-[#1C1B18] flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>AUDITED L2</span>
-              </div>
-            </div>
+          <div data-h-cta className="mt-10 flex flex-col sm:flex-row gap-3">
+            <Link href="/stake" className="btn btn-paper group !h-14 !px-8 !text-[16px]">
+              Light the kiln
+              <ArrowUpRight className="w-5 h-5 transition-transform duration-500 ease-vault group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+            <Link href="/position" className="btn btn-line !h-14 !px-8 !text-[16px]">
+              View my firing log
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Hero Bottom Hairline & Coordinate Markers */}
-      <div className="max-w-7xl mx-auto w-full pt-8 sm:pt-10 border-t border-black/[0.08] flex items-center justify-between text-[11px] font-mono text-[#6B665E] uppercase tracking-widest">
-        <div className="flex items-center gap-3">
-          <span className="text-[#283615] font-bold">01 // TELEMETRY</span>
-          <span className="hidden sm:inline text-black/20">|</span>
-          <span className="hidden sm:inline">AUTONOMOUS PROTOCOL LIQUIDITY</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>SCROLL TO EXPLORE</span>
-          <span className="animate-bounce">↓</span>
-        </div>
+      {/* The kiln gauge: live figures stamped along the foot of the page */}
+      <div className="relative z-10 w-full mb-12 sm:mb-16 border-y border-terra/25 bg-ink-3/70 backdrop-blur-[2px]">
+        <dl
+          data-h-micr
+          className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-2 lg:grid-cols-4 font-mono text-paper"
+        >
+          {[
+            { k: "Estimated APY", v: apy ?? "—", mark: "transit" as const, hi: true },
+            { k: "In the kiln", v: `${deposits} USDG`, mark: "amount" as const },
+            { k: "Lockup", v: "None", mark: "onus" as const },
+            { k: "Rewards paid", v: "Every block", mark: "transit" as const },
+          ].map((item, i) => (
+            <div
+              key={item.k}
+              className={`py-5 sm:py-6 min-w-0 ${i % 2 === 1 ? "pl-5 sm:pl-8 border-l border-terra/20" : ""} ${
+                i >= 2 ? "border-t lg:border-t-0 border-terra/20" : ""
+              } ${i === 2 ? "lg:pl-8 lg:border-l" : ""}`}
+            >
+              <dt className="flex items-center gap-2 text-[11px] tracking-[0.04em] text-paper-faint">
+                <MicrMark kind={item.mark} className="text-terra" />
+                {item.k}
+              </dt>
+              <dd className={`pt-2 text-[17px] sm:text-xl font-medium truncate ${item.hi ? "text-terra-hi" : ""}`}>
+                {item.k === "In the kiln" ? <RollingNumber value={item.v} /> : item.v}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

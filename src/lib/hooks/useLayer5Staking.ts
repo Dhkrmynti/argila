@@ -297,7 +297,7 @@ export function useLayer5Staking() {
         setTxState({
           step: "SUCCESS",
           title: "STAKE CONFIRMED",
-          description: `${amountStr} USDG is now actively generating Aegis rewards.`,
+          description: `${amountStr} USDG is now actively generating Argila rewards.`,
           txHash: hash,
         });
       }, 2500);
@@ -359,14 +359,14 @@ export function useLayer5Staking() {
     }
   };
 
-  // Claim Aegis rewards
+  // Claim Argila rewards
   const claim = async () => {
     if (!contractAddress) return;
     try {
       setTxState({
         step: "CONFIRMING",
-        title: "CLAIMING AEGIS REWARDS",
-        description: "Confirm Aegis reward claim in your wallet (Network Fee: ETH)...",
+        title: "CLAIMING ARGL REWARDS",
+        description: "Confirm Argila reward claim in your wallet (Network Fee: ETH)...",
       });
 
       const hash = await writeContractAsync({
@@ -378,7 +378,7 @@ export function useLayer5Staking() {
       setTxState({
         step: "PENDING",
         title: "CLAIM PENDING",
-        description: "Transferring Aegis rewards on Robinhood Chain...",
+        description: "Transferring Argila rewards on Robinhood Chain...",
         txHash: hash,
       });
 
@@ -386,8 +386,8 @@ export function useLayer5Staking() {
         refetchAll();
         setTxState({
           step: "SUCCESS",
-          title: "AEGIS REWARDS CLAIMED",
-          description: "Accumulated Aegis rewards have been transferred to your wallet.",
+          title: "ARGL REWARDS CLAIMED",
+          description: "Accumulated Argila rewards have been transferred to your wallet.",
           txHash: hash,
         });
       }, 2500);
@@ -422,7 +422,7 @@ export function useLayer5Staking() {
     totalStakers: totalStakersRaw ? Number(totalStakersRaw) : 0,
     stakingDuration: durationSeconds,
     calculatedApy,
-    aegisState: layer5State,
+    argilaState: layer5State,
     layer5State,
     kawaState,
     // Transactions
@@ -435,5 +435,5 @@ export function useLayer5Staking() {
   };
 }
 
-export const useAegisStaking = useLayer5Staking;
+export const useArgilaStaking = useLayer5Staking;
 export const useKawaStaking = useLayer5Staking;

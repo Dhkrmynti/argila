@@ -2,70 +2,87 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { GuillocheRosette } from "@/components/vault/Guilloche";
 
+const ease = [0.76, 0, 0.24, 1] as const;
+
+/*
+ * The kiln door, once per session: the wheel turns a quarter, the vessel
+ * settles, and the two leaves part to reveal the studio. About a second.
+ */
 export const IntroLoader: React.FC = () => {
   const [visible, setVisible] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    // Quick, high-end 650ms intro sequence
-    const timer = setTimeout(() => {
+    if (document.documentElement.dataset.vaultSeen === "1") {
       setVisible(false);
-    }, 700);
+      return;
+    }
+    try {
+      sessionStorage.setItem("argila-kiln-opened", "1");
+    } catch {}
 
-    return () => clearTimeout(timer);
+    const t1 = setTimeout(() => setOpen(true), 650);
+    const t2 = setTimeout(() => {
+      setVisible(false);
+      // Later client-side visits to the studio skip the door too
+      document.documentElement.dataset.vaultSeen = "1";
+    }, 1500);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, []);
 
   return (
+    <>
+    {/* Decided before first paint so a returning visitor never sees the door flash */}
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `try{if(sessionStorage.getItem("argila-kiln-opened")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.vaultSeen="1"}catch(e){}`,
+      }}
+    />
     <AnimatePresence>
       {visible && (
         <motion.div
-          key="l5-intro-loader"
-          initial={{ opacity: 1 }}
+          key="vault-door"
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[9999] bg-[#050706] flex flex-col items-center justify-center pointer-events-none select-none"
+          transition={{ duration: 0.2 }}
+          className="vault-door fixed inset-0 z-[9999] pointer-events-none select-none"
+          aria-hidden="true"
         >
-          <div className="relative flex flex-col items-center space-y-4">
+          {(["top", "bottom"] as const).map((leaf) => (
             <motion.div
-              initial={{ scale: 0.8, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 1.05, opacity: 0, y: -10 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-3"
+              key={leaf}
+              initial={{ y: 0 }}
+              animate={{ y: open ? (leaf === "top" ? "-100%" : "100%") : 0 }}
+              transition={{ duration: 0.85, ease }}
+              className={`absolute left-0 right-0 h-1/2 bg-ink-3 overflow-hidden ${leaf === "top" ? "top-0" : "bottom-0"}`}
             >
-              <span className="font-display font-black text-3xl sm:text-4xl tracking-[-0.04em] text-[#F5F7F2]">
-                AEGIS
-              </span>
-              <span className="h-6 w-[1.5px] bg-[#C7FF28]/60" />
-              <span className="font-mono text-xs sm:text-sm tracking-[0.3em] uppercase text-[#9AA09A]">
-                PROTOCOL
-              </span>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.3 }}
-              className="flex items-center gap-2"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C7FF28] animate-pulse" />
-              <span className="text-[10px] font-mono tracking-[0.25em] text-[#9AA09A] uppercase">
-                ROBINHOOD CHAIN MAINNET
-              </span>
-            </motion.div>
-
-            {/* Subtle Progress Bar */}
-            <div className="w-32 h-[1px] bg-white/10 overflow-hidden relative mt-2">
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "100%" }}
-                transition={{ duration: 0.65, ease: "easeInOut" }}
-                className="w-full h-full bg-[#C7FF28]"
+              <div className={`absolute left-1/2 -translate-x-1/2 w-[22rem] h-[22rem] ${leaf === "top" ? "-bottom-[11rem]" : "-top-[11rem]"}`}>
+                <motion.div
+                  initial={{ rotate: 0 }}
+                  animate={{ rotate: 90 }}
+                  transition={{ duration: 0.65, ease }}
+                  className="w-full h-full"
+                >
+                  <GuillocheRosette className="w-full h-full text-terra" />
+                </motion.div>
+                <img
+                  src="/argila-logo-terra.png"
+                  alt=""
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 object-contain"
+                />
+              </div>
+              <div
+                className={`absolute left-0 right-0 h-px bg-terra/60 ${leaf === "top" ? "bottom-0" : "top-0"}`}
               />
-            </div>
-          </div>
+            </motion.div>
+          ))}
         </motion.div>
       )}
     </AnimatePresence>
+    </>
   );
 };

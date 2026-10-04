@@ -71,9 +71,9 @@ async function buildBlackAssets() {
     .toBuffer();
 
   // Save black & white master files
-  fs.writeFileSync('public/aegis-logo-black.png', blackFinal);
-  fs.writeFileSync('public/aegis-logo-white.png', whiteFinal);
-  fs.writeFileSync('public/aegis-logo-transparent.png', blackFinal);
+  fs.writeFileSync('public/argila-logo-black.png', blackFinal);
+  fs.writeFileSync('public/argila-logo-white.png', whiteFinal);
+  fs.writeFileSync('public/argila-logo-transparent.png', blackFinal);
   fs.writeFileSync('public/layer5-logo-black-trimmed.png', blackFinal);
   fs.writeFileSync('public/layer5-logo-white-trimmed.png', whiteFinal);
 

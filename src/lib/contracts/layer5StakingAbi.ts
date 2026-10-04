@@ -560,5 +560,5 @@ export const layer5StakingAbi = [
   }
 ] as const;
 
-export const aegisStakingAbi = layer5StakingAbi;
+export const argilaStakingAbi = layer5StakingAbi;
 export const kawaStakingAbi = layer5StakingAbi;

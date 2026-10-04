@@ -149,8 +149,8 @@ export const VodkaAdminPanel: React.FC = () => {
       const amountWei = parseUnits(kawaWithdrawAmount, KAWA_DECIMALS);
       setTxState({
         step: "CONFIRMING",
-        title: "CONFIRM AEGIS WITHDRAWAL",
-        description: `Confirm administrative withdrawal of ${kawaWithdrawAmount} AEGIS in your wallet...`,
+        title: "CONFIRM ARGL WITHDRAWAL",
+        description: `Confirm administrative withdrawal of ${kawaWithdrawAmount} ARGL in your wallet...`,
       });
 
       const hash = await writeContractAsync({
@@ -162,7 +162,7 @@ export const VodkaAdminPanel: React.FC = () => {
 
       setTxState({
         step: "PENDING",
-        title: "WITHDRAWING AEGIS",
+        title: "WITHDRAWING ARGL",
         description: "Transaction submitted to Robinhood Chain...",
         txHash: hash,
       });
@@ -171,7 +171,7 @@ export const VodkaAdminPanel: React.FC = () => {
       setTimeout(async () => {
         setTxState({
           step: "SUCCESS",
-          title: "AEGIS WITHDRAWAL CONFIRMED",
+          title: "ARGL WITHDRAWAL CONFIRMED",
           description: `Successfully withdrawn to admin address ${formatAddress(address)}.`,
           txHash: hash,
         });
@@ -181,7 +181,7 @@ export const VodkaAdminPanel: React.FC = () => {
       setTxState({
         step: "FAILED",
         title: "TRANSACTION FAILED",
-        description: err?.shortMessage || err?.message || "Failed to execute AEGIS withdrawal.",
+        description: err?.shortMessage || err?.message || "Failed to execute ARGL withdrawal.",
       });
     }
   };
@@ -195,7 +195,7 @@ export const VodkaAdminPanel: React.FC = () => {
       setTxState({
         step: "CONFIRMING",
         title: "CONFIRM REWARD SPEED UPDATE",
-        description: `Setting reward speed to ${rateToUse} AEGIS/sec in your wallet...`,
+        description: `Setting reward speed to ${rateToUse} ARGL/sec in your wallet...`,
       });
 
       const hash = await writeContractAsync({
@@ -217,7 +217,7 @@ export const VodkaAdminPanel: React.FC = () => {
         setTxState({
           step: "SUCCESS",
           title: "REWARD SPEED UPDATED",
-          description: `Reward emission rate successfully set to ${rateToUse} AEGIS/sec.`,
+          description: `Reward emission rate successfully set to ${rateToUse} ARGL/sec.`,
           txHash: hash,
         });
         await handleRefreshAll();
@@ -430,11 +430,11 @@ export const VodkaAdminPanel: React.FC = () => {
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#1b1e26] border border-white/20 flex items-center justify-center font-mono text-xs text-[#c8f53c] font-bold shrink-0">
-                    AEGIS
+                    ARGL
                   </div>
                   <div>
                     <h2 className="text-sm font-mono tracking-wider text-white uppercase font-medium">
-                      AEGIS REWARD POOL
+                      ARGL REWARD POOL
                     </h2>
                     <span className="text-[10px] font-mono text-[#8e95a2] uppercase">
                       REWARD TOKEN (18 DECIMALS)
@@ -450,7 +450,7 @@ export const VodkaAdminPanel: React.FC = () => {
               <div className="grid grid-cols-1 font-mono">
                 <div className="p-4 rounded-xl bg-[#0a0b0d] border border-white/5 space-y-1">
                   <span className="text-[10px] text-[#8e95a2] uppercase block">
-                    TOTAL AEGIS IN CONTRACT
+                    TOTAL ARGL IN CONTRACT
                   </span>
                   <div className="text-2xl sm:text-3xl font-light text-[#c8f53c]">
                     {rewardTokenAddress ? formatTokenAmount(contractKawaBig, KAWA_DECIMALS, 4) : "—"}
@@ -466,7 +466,7 @@ export const VodkaAdminPanel: React.FC = () => {
               {/* Withdraw Form */}
               <div className="space-y-2 pt-2">
                 <label className="text-[10px] font-mono text-[#8e95a2] uppercase tracking-wider block">
-                  AMOUNT TO WITHDRAW (AEGIS)
+                  AMOUNT TO WITHDRAW (ARGL)
                 </label>
                 <div className="border border-white/10 rounded-xl p-3.5 bg-[#0a0b0d] flex items-center justify-between focus-within:border-[#c8f53c] transition">
                   <input
@@ -478,7 +478,7 @@ export const VodkaAdminPanel: React.FC = () => {
                     className="w-full bg-transparent font-mono text-xl sm:text-2xl text-white outline-none placeholder:text-neutral-600 font-light disabled:opacity-40 disabled:cursor-not-allowed"
                   />
                   <div className="flex items-center gap-2 shrink-0 ml-3">
-                    <span className="text-xs font-mono text-[#8e95a2] uppercase">AEGIS</span>
+                    <span className="text-xs font-mono text-[#8e95a2] uppercase">ARGL</span>
                     <button
                       type="button"
                       disabled={!rewardTokenAddress}
@@ -505,7 +505,7 @@ export const VodkaAdminPanel: React.FC = () => {
               }
               className="w-full py-3.5 px-6 rounded-full bg-[#c8f53c] text-[#090a0c] font-mono text-xs tracking-[0.2em] uppercase font-semibold hover:bg-[#b8e52c] disabled:opacity-30 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-[#c8f53c]/20"
             >
-              <ArrowDownToLine className="w-4 h-4" /> {rewardTokenAddress ? "WITHDRAW AEGIS TO ADMIN" : "TOKEN NOT CONFIGURED"}
+              <ArrowDownToLine className="w-4 h-4" /> {rewardTokenAddress ? "WITHDRAW ARGL TO ADMIN" : "TOKEN NOT CONFIGURED"}
             </button>
           </div>
         </div>
@@ -529,10 +529,10 @@ export const VodkaAdminPanel: React.FC = () => {
             <div className="text-right">
               <div className="text-xs font-mono text-[#8e95a2] uppercase tracking-wider">CURRENT SPEED</div>
               <div className="text-xl font-mono font-semibold text-[#c8f53c]">
-                {formatTokenAmount(rewardRateBig, KAWA_DECIMALS, 4)} AEGIS/sec
+                {formatTokenAmount(rewardRateBig, KAWA_DECIMALS, 4)} ARGL/sec
               </div>
               <span className="text-[10px] text-neutral-500 font-mono">
-                ≈ {(parseFloat(formatTokenAmount(rewardRateBig, KAWA_DECIMALS, 4)) * 86400).toLocaleString()} AEGIS/day
+                ≈ {(parseFloat(formatTokenAmount(rewardRateBig, KAWA_DECIMALS, 4)) * 86400).toLocaleString()} ARGL/day
               </span>
             </div>
           </div>
@@ -540,7 +540,7 @@ export const VodkaAdminPanel: React.FC = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-[10px] font-mono text-[#8e95a2] uppercase tracking-wider">
-                SET NEW SPEED (AEGIS PER SECOND)
+                SET NEW SPEED (ARGL PER SECOND)
               </label>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] font-mono text-neutral-500">Presets:</span>
@@ -567,7 +567,7 @@ export const VodkaAdminPanel: React.FC = () => {
                 className="w-full bg-transparent font-mono text-xl sm:text-2xl text-white outline-none placeholder:text-neutral-600 font-light"
               />
               <span className="text-xs font-mono text-[#8e95a2] uppercase ml-3 shrink-0">
-                AEGIS / SEC
+                ARGL / SEC
               </span>
             </div>
           </div>

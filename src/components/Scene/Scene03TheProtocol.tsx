@@ -8,17 +8,17 @@ export const Scene03TheProtocol: React.FC = () => {
     {
       num: "01",
       title: "STAKE USDG",
-      description: "Users deposit USDG directly into the immutable Aegis staking smart contract.",
+      description: "Users deposit USDG directly into the immutable Argila staking smart contract.",
     },
     {
       num: "02",
       title: "REMAIN IN FLOW",
-      description: "The protocol algorithmically calculates Aegis (AEGIS) rewards per second using standard Synthetix-grade accounting.",
+      description: "The protocol algorithmically calculates Argila (ARGL) rewards per second using standard Synthetix-grade accounting.",
     },
     {
       num: "03",
-      title: "CLAIM AEGIS",
-      description: "Yield compounds continuously every block. Harvest Aegis (AEGIS) rewards or exit USDG whenever you choose.",
+      title: "CLAIM ARGL",
+      description: "Yield compounds continuously every block. Harvest Argila (ARGL) rewards or exit USDG whenever you choose.",
     },
   ];
 
@@ -34,10 +34,10 @@ export const Scene03TheProtocol: React.FC = () => {
         {/* Title Header */}
         <div className="space-y-2">
           <h2 className="text-3xl sm:text-5xl font-light tracking-[0.1em] text-white uppercase font-sans">
-            THE AEGIS <span className="text-[#c8f53c] font-normal">PROTOCOL</span>
+            THE ARGL <span className="text-[#c8f53c] font-normal">PROTOCOL</span>
           </h2>
           <p className="text-xs sm:text-sm font-mono tracking-[0.05em] text-[#8e95a2] max-w-md mx-auto pt-1">
-            Stake USDG. Remain in the flow. Earn Aegis (AEGIS) rewards over time.
+            Stake USDG. Remain in the flow. Earn Argila (ARGL) rewards over time.
           </p>
         </div>
 

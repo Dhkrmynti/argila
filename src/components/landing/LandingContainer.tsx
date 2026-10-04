@@ -4,9 +4,8 @@ import React, { useRef } from "react";
 import { useScroll, useSpring } from "framer-motion";
 import { IntroLoader } from "./IntroLoader";
 import { HeroSection } from "./HeroSection";
-import { MarqueeTicker } from "./MarqueeTicker";
-import { ProtocolStorySection } from "./ProtocolStorySection";
-import { HowItWorksSection } from "./HowItWorksSection";
+import { FiringLogSection } from "./FiringLogSection";
+import { NotesSection } from "./NotesSection";
 import { LiveMetricsSection } from "./LiveMetricsSection";
 import { ProtocolFaqSection } from "./ProtocolFaqSection";
 import { FinalCTASection } from "./FinalCTASection";
@@ -29,30 +28,21 @@ export const LandingContainer: React.FC = () => {
   const { totalStaked, calculatedApy, totalStakers, stakeDecimals } = useLayer5Staking();
 
   return (
-    <div
-      ref={containerRef}
-      className="relative min-h-screen w-full bg-[#F6F3EC] text-[#1C1B18] overflow-x-hidden selection:bg-[#1C1B18] selection:text-[#F6F3EC]"
-    >
-      {/* Intro sequence */}
+    <div ref={containerRef} className="relative min-h-screen w-full text-paper overflow-x-clip">
       <IntroLoader />
 
-      {/* Hero Section */}
       <HeroSection
         scrollProgress={scrollYProgress}
         smoothProgress={smoothProgress}
         calculatedApy={calculatedApy}
+        totalStaked={totalStaked}
+        stakeDecimals={stakeDecimals}
       />
 
-      {/* Marquee Streaming Ribbon (Inspired by royalty.global) */}
-      <MarqueeTicker />
+      <FiringLogSection />
 
-      {/* Section 2: Architectural Story with scroll-driven illuminating words */}
-      <ProtocolStorySection />
+      <NotesSection />
 
-      {/* Section 3: Editorial 3-phase execution timeline */}
-      <HowItWorksSection />
-
-      {/* Section 4: Verifiable On-chain Telemetry */}
       <LiveMetricsSection
         totalStaked={totalStaked}
         calculatedApy={calculatedApy}
@@ -60,13 +50,8 @@ export const LandingContainer: React.FC = () => {
         stakeDecimals={stakeDecimals}
       />
 
-      {/* Reverse Marquee Ribbon */}
-      <MarqueeTicker reverse />
-
-      {/* Section 5: Protocol Intelligence FAQ Accordion */}
       <ProtocolFaqSection />
 
-      {/* Section 6 & Footer: Final invitation to stake */}
       <FinalCTASection />
     </div>
   );

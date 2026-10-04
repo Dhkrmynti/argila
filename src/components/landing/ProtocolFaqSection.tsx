@@ -2,147 +2,105 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Plus, Minus } from "lucide-react";
+import { ArrowUpRight, Plus } from "lucide-react";
 import Link from "next/link";
 
 interface FaqItem {
   question: string;
   answer: string;
-  category: string;
 }
+
+const faqs: FaqItem[] = [
+  {
+    question: "Is there a lockup, a waiting period, or an exit fee?",
+    answer:
+      "No. You can deposit and withdraw at any time. The contract has no unbonding period and charges no deposit or withdrawal fee; you only pay the network fee in ETH.",
+  },
+  {
+    question: "How are my rewards worked out?",
+    answer:
+      "The contract keeps a running reward-per-token figure. When a block lands, ARGL is credited to every depositor in proportion to their share of the kiln, without looping over accounts, so the cost to you does not grow as the kiln grows.",
+  },
+  {
+    question: "When can I collect my ARGL?",
+    answer:
+      "Whenever you like. Claiming sends your accrued ARGL to your wallet and leaves your USDG in the kiln, still earning. Exiting does both at once.",
+  },
+  {
+    question: "Why Robinhood Chain?",
+    answer:
+      "It is where USDG lives, and its low network fees make it reasonable to claim small amounts or adjust your deposit often.",
+  },
+];
 
 export const ProtocolFaqSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const faqs: FaqItem[] = [
-    {
-      category: "LIQUIDITY",
-      question: "Are there any lockup periods, unbonding delays, or exit penalties?",
-      answer:
-        "No. Aegis operates with zero artificial lockup epochs. You can deposit USDG and withdraw your full principal at any second. There are no 7-day cooldowns or slashing penalties.",
-    },
-    {
-      category: "ALGORITHM",
-      question: "How does the Synthetix O(1) mathematical streaming engine work?",
-      answer:
-        "Traditional staking iterates through staker lists linearly, causing gas spikes. Aegis uses constant-time O(1) reward per token accumulators. Rewards accrue deterministically per block with minimal computational overhead regardless of protocol participant volume.",
-    },
-    {
-      category: "ASSET SECURITY",
-      question: "Is Aegis non-custodial and verified on Robinhood Chain?",
-      answer:
-        "Yes. The staking contract is completely non-custodial and EVM-native. Only your wallet holds the cryptographic authority to deposit and withdraw collateral. Smart contract bytecode is fully verifiable on the Robinhood Chain explorer.",
-    },
-    {
-      category: "YIELD HARVESTING",
-      question: "When and how are Aegis reward tokens distributed?",
-      answer:
-        "Rewards accrue in real-time with every Robinhood Chain block. You can click 'Claim Rewards' at any time to transfer earned Aegis directly to your wallet without touching your staked USDG principal.",
-    },
-    {
-      category: "NETWORK",
-      question: "Why Robinhood Chain L2?",
-      answer:
-        "Robinhood Chain provides sub-second transaction finality and fractional-cent gas costs. This allows frequent yield compounding, staking, and rebalancing without paying punitive Ethereum Layer 1 gas fees.",
-    },
-  ];
-
   return (
-    <section className="relative w-full py-24 sm:py-32 lg:py-40 px-4 sm:px-8 lg:px-12 bg-[#EFECE3] border-t border-black/[0.08] overflow-hidden">
-      {/* Background radial glow */}
-      <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-[#E2DDD0]/60 blur-[170px] rounded-full pointer-events-none -z-10" />
-
-      <div className="max-w-6xl mx-auto space-y-16 sm:space-y-20">
-        {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-black/[0.08] pb-8">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-xs font-mono tracking-[0.25em] text-[#283615] uppercase font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#283615]" />
-              <span>05 // FREQUENTLY ASKED QUESTIONS</span>
-            </div>
-            <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-[-0.03em] uppercase text-[#1C1B18]">
-              PROTOCOL
-              <br />
-              <span className="text-[#283615]">INTELLIGENCE.</span>
+    <section data-recede className="relative w-full bg-ink-3/75 text-paper py-24 sm:py-32 lg:py-40 overflow-hidden">
+      <div data-reveal="band" className="band-wave absolute top-0 inset-x-0 text-terra/30" aria-hidden="true" />
+      <div className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-32 space-y-6">
+            <h2 data-reveal="lines" className="font-display font-extrabold text-[2.4rem] sm:text-5xl lg:text-[3.6rem] leading-[0.98] text-balance">
+              Before you fire.
             </h2>
-          </div>
-          <div className="font-mono text-xs text-[#6B665E] uppercase tracking-widest max-w-sm text-left lg:text-right">
-            DETERMINISTIC VERIFICATION // TRANSPARENT DEFI
+            <p className="text-lg leading-relaxed text-paper-dim max-w-[28rem]">
+              The short version of what the contract does with your money.
+            </p>
+            <Link href="/docs" className="btn btn-line">
+              Read the documentation
+              <ArrowUpRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
 
-        {/* Accordion List */}
-        <div className="divide-y divide-black/[0.08] border-y border-black/[0.08]">
+        <div data-reveal="rows" className="lg:col-span-8 border-t border-terra/40">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div
-                key={index}
-                className="group transition-colors duration-300 hover:bg-black/[0.02]"
-              >
+              <div key={index} className="border-b border-terra/20">
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full py-6 sm:py-8 flex items-start sm:items-center justify-between gap-6 text-left select-none cursor-pointer"
+                  className="group w-full py-7 sm:py-8 flex items-start justify-between gap-6 text-left cursor-pointer"
                   aria-expanded={isOpen}
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8">
-                    <span className="font-mono text-xs text-[#6B665E] tracking-widest uppercase">
-                      [{faq.category}]
-                    </span>
-                    <span
-                      className={`font-display font-bold text-lg sm:text-xl md:text-2xl tracking-tight uppercase transition-colors ${
-                        isOpen
-                          ? "text-[#283615]"
-                          : "text-[#1C1B18] group-hover:text-black"
-                      }`}
-                    >
-                      {faq.question}
-                    </span>
-                  </div>
-
-                  <div className="p-2 rounded-full border border-black/[0.12] group-hover:border-black/30 shrink-0 text-[#1C1B18] transition-colors mt-1 sm:mt-0">
-                    {isOpen ? <Minus className="w-4 h-4 text-[#283615]" /> : <Plus className="w-4 h-4" />}
-                  </div>
+                  <span
+                    className={`font-display font-bold text-xl sm:text-2xl leading-snug transition-colors duration-300 ${
+                      isOpen ? "text-terra-hi" : "text-paper group-hover:text-terra-hi"
+                    }`}
+                  >
+                    {faq.question}
+                  </span>
+                  <motion.span
+                    animate={{ rotate: isOpen ? 135 : 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                    className={`mt-1 w-9 h-9 shrink-0 grid place-items-center rounded-full border transition-colors duration-300 ${
+                      isOpen ? "border-terra-hi text-terra-hi" : "border-paper/30 text-paper group-hover:border-terra-hi"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </motion.span>
                 </button>
 
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      initial={{ height: 0, opacity: 0, filter: "blur(4px)" }}
+                      animate={{ height: "auto", opacity: 1, filter: "blur(0px)" }}
+                      exit={{ height: 0, opacity: 0, filter: "blur(4px)" }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="pb-8 pr-6 sm:pr-16 sm:pl-28 font-sans text-sm sm:text-base text-[#6B665E] leading-relaxed max-w-4xl">
-                        {faq.answer}
-                      </div>
+                      <p className="pb-8 pr-14 text-lg leading-relaxed text-paper-dim max-w-[62ch]">{faq.answer}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
             );
           })}
-        </div>
-
-        {/* Bottom Support Callout */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-white border border-black/[0.08] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div className="space-y-1">
-            <div className="font-display font-bold text-base text-[#1C1B18] uppercase">
-              Need technical documentation?
-            </div>
-            <div className="font-sans text-xs sm:text-sm text-[#6B665E]">
-              Read full smart contract architecture, mathematical derivations, and integration guides.
-            </div>
-          </div>
-          <Link
-            href="/docs"
-            className="px-6 py-3 rounded-full bg-[#FAF8F5] hover:bg-white border border-black/[0.12] hover:border-black/30 text-[#1C1B18] font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 inline-flex items-center gap-2 shrink-0 shadow-sm"
-          >
-            <span>OPEN DOCUMENTATION</span>
-            <ArrowUpRight className="w-3.5 h-3.5 text-[#283615]" />
-          </Link>
         </div>
       </div>
     </section>

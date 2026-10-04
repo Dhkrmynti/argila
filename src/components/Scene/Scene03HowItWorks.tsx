@@ -53,14 +53,14 @@ export const Scene03HowItWorks: React.FC = () => {
     },
     {
       id: "reward",
-      title: "AEGIS HARVEST",
+      title: "ARGL HARVEST",
       stage: "STAGE 04",
       iconLucide: Coins,
       tagline: "Instantaneous Non-Custodial Yield",
       description:
-        "Harvest accumulated Aegis (AEGIS) rewards directly into your wallet whenever you desire. Or withdraw your full USDG principal at any moment with single-slot finality.",
+        "Harvest accumulated Argila (ARGL) rewards directly into your wallet whenever you desire. Or withdraw your full USDG principal at any moment with single-slot finality.",
       metrics: [
-        { label: "REWARD ASSET", value: "Aegis (AEGIS) Token" },
+        { label: "REWARD ASSET", value: "Argila (ARGL) Token" },
         { label: "FINALITY", value: "< 1000ms" },
         { label: "SETTLEMENT", value: "Instant Exit" },
       ],

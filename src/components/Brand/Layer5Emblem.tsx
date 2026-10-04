@@ -11,7 +11,7 @@ export interface Layer5EmblemProps {
   variant?: "black" | "white";
 }
 
-export type AegisEmblemProps = Layer5EmblemProps;
+export type ArgilaEmblemProps = Layer5EmblemProps;
 export type KawaEmblemProps = Layer5EmblemProps;
 
 export const Layer5Emblem: React.FC<Layer5EmblemProps> = ({
@@ -21,7 +21,7 @@ export const Layer5Emblem: React.FC<Layer5EmblemProps> = ({
   animate = false,
   variant = "black",
 }) => {
-  const src = variant === "white" ? "/aegis-logo-white.png" : "/aegis-logo-black.png";
+  const src = variant === "white" ? "/argila-logo-terra.png" : "/argila-logo-ink.png";
 
   return (
     <div
@@ -35,7 +35,7 @@ export const Layer5Emblem: React.FC<Layer5EmblemProps> = ({
       >
         <img
           src={src}
-          alt="Aegis Emblem"
+          alt="Argila logo"
           className="w-full h-full object-contain pointer-events-none transition-transform duration-700 hover:scale-105"
         />
       </div>
@@ -43,5 +43,5 @@ export const Layer5Emblem: React.FC<Layer5EmblemProps> = ({
   );
 };
 
-export const AegisEmblem = Layer5Emblem;
+export const ArgilaEmblem = Layer5Emblem;
 export const KawaEmblem = Layer5Emblem;

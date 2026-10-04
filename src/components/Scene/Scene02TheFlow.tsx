@@ -82,7 +82,7 @@ export const Scene02TheFlow: React.FC = () => {
               GROW
             </div>
             <div className="text-xs font-mono tracking-[0.25em] text-[#8e95a2] uppercase max-w-xs">
-              AEGIS REWARDS ACCUMULATE
+              ARGL REWARDS ACCUMULATE
             </div>
           </motion.div>
 
@@ -95,7 +95,7 @@ export const Scene02TheFlow: React.FC = () => {
               REWARD
             </div>
             <div className="text-xs font-mono tracking-[0.25em] text-[#8e95a2] uppercase max-w-xs">
-              CLAIM HARVESTED AEGIS TOKENS
+              CLAIM HARVESTED ARGL TOKENS
             </div>
           </motion.div>
         </div>

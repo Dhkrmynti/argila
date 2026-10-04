@@ -2,77 +2,88 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Layer5Emblem } from "../Brand/Layer5Emblem";
-import { ShieldCheck, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { protocolConfig } from "@/lib/blockchain/config";
+import { formatAddress } from "@/lib/utils/formatters";
+import { MicrMark } from "@/components/vault/Guilloche";
 
 export const Footer: React.FC = () => {
-  const pathname = usePathname();
-
-  // Home page has Scene08FinalCTA with its own monumental bottom closure
-  if (pathname === "/") {
-    return null;
-  }
+  const link = "text-paper-dim hover:text-paper transition-colors";
+  const ext = `${link} inline-flex items-center gap-1`;
+  const explorer = protocolConfig.explorerUrl;
 
   return (
-    <footer className="w-full border-t border-black/[0.08] bg-[#FAF8F5] py-8 sm:py-12 px-4 sm:px-12 text-xs font-mono text-[#6B665E] mt-auto">
-      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          {/* Brand & Editorial Signature */}
-          <div className="space-y-2">
-            <Link href="/" className="flex items-center gap-3 group">
-              <Layer5Emblem size={24} variant="black" animate={false} />
-              <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-[#1C1B18] uppercase group-hover:text-[#283615] transition">
-                AEGIS PROTOCOL
-              </span>
+    <footer className="relative z-10 w-full mt-auto bg-ink-3 text-paper">
+      <div data-reveal="band" className="band-wave text-terra/30" aria-hidden="true" />
+      <div className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 pt-16 sm:pt-20 pb-10">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-x-8 gap-y-12">
+          <div className="col-span-2 md:col-span-5 space-y-5">
+            <Link href="/" className="inline-flex items-center gap-3">
+              <img src="/argila-logo-terra.png" alt="" className="w-8 h-8 object-contain" />
+              <span className="font-display font-extrabold text-2xl tracking-[0.06em]">ARGILA</span>
             </Link>
-            <div className="font-cursive text-base text-[#283615] lowercase">
-              ~ autonomous liquidity streams on robinhood chain ~
-            </div>
+            <p className="text-paper-dim leading-relaxed max-w-sm">
+              Patience, fired into value. A staking protocol on Robinhood Chain: set USDG in the kiln, draw ARGL every block, take it back whenever you choose.
+            </p>
           </div>
 
-          {/* Navigation Links */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-mono uppercase tracking-wider">
-            <Link href="/" className="text-[#6B665E] hover:text-[#1C1B18] transition">
-              Protocol
-            </Link>
-            <Link href="/stake" className="text-[#6B665E] hover:text-[#1C1B18] transition">
-              Stake
-            </Link>
-            <Link href="/position" className="text-[#6B665E] hover:text-[#1C1B18] transition">
-              Position
-            </Link>
-            <Link href="/stats" className="text-[#6B665E] hover:text-[#1C1B18] transition">
-              Stats
-            </Link>
-            <Link href="/docs" className="text-[#6B665E] hover:text-[#1C1B18] transition">
-              Docs
-            </Link>
-            <a
-              href="https://x.com/aegistak"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#6B665E] hover:text-[#1C1B18] transition flex items-center gap-1"
-            >
-              <span>X (@aegistak)</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </a>
+          <nav aria-label="Footer" className="md:col-span-2 space-y-4">
+            <p className="font-mono text-[11px] tracking-[0.06em] text-terra">Argila</p>
+            <ul className="space-y-2.5 wide">
+              <li><Link href="/stake" className={link}>Deposit</Link></li>
+              <li><Link href="/position" className={link}>Firing log</Link></li>
+              <li><Link href="/stats" className={link}>Report</Link></li>
+              <li><Link href="/docs" className={link}>Documentation</Link></li>
+            </ul>
+          </nav>
+
+          <div className="md:col-span-3 space-y-4">
+            <p className="font-mono text-[11px] tracking-[0.06em] text-terra">Registered contracts</p>
+            <ul className="space-y-2.5 wide">
+              <li>
+                <a href={`${explorer}/address/${protocolConfig.stakingContractAddress}`} target="_blank" rel="noopener noreferrer" className={ext}>
+                  Staking contract <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </li>
+              <li>
+                <a href={`${explorer}/token/${protocolConfig.rewardTokenAddress}`} target="_blank" rel="noopener noreferrer" className={ext}>
+                  ARGL token <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </li>
+              <li>
+                <a href={`${explorer}/token/${protocolConfig.stakeTokenAddress}`} target="_blank" rel="noopener noreferrer" className={ext}>
+                  USDG token <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </li>
+              <li><Link href="/vodka" className={link}>Admin</Link></li>
+            </ul>
+          </div>
+
+          <div className="md:col-span-2 space-y-4">
+            <p className="font-mono text-[11px] tracking-[0.06em] text-terra">Correspondence</p>
+            <ul className="space-y-2.5 wide">
+              <li>
+                <a href="https://x.com/argilaxyz" target="_blank" rel="noopener noreferrer" className={ext}>
+                  X @argilaxyz <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </li>
+              <li className="text-paper-faint">argila.xyz</li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Metadata & Badges */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-black/[0.08] text-[11px]">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <span className="inline-flex items-center gap-1.5 text-[#283615] font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#283615]" /> Synthetix Non-Custodial Architecture
-            </span>
-            <span className="text-black/20 hidden sm:inline">•</span>
-            <span className="text-[#6B665E]">Robinhood Chain L2</span>
-          </div>
-
-          <div className="text-[#6B665E] uppercase tracking-widest font-mono text-[10px]">
-            &copy; 2026 AEGIS PROTOCOL • ALL RIGHTS RESERVED
-          </div>
+        {/* The MICR line along the foot of a cheque */}
+        <div className="mt-16 pt-6 border-t border-terra/20 flex flex-col md:flex-row md:items-center justify-between gap-3 font-mono text-[12px] text-paper-faint tnum">
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <MicrMark kind="transit" />
+            <span>{protocolConfig.chainId}</span>
+            <MicrMark kind="transit" />
+            <span>{formatAddress(protocolConfig.stakingContractAddress) || "unconfigured"}</span>
+            <MicrMark kind="onus" />
+            <span>USDG/ARGL</span>
+            <MicrMark kind="amount" />
+          </span>
+          <span>© 2026 Argila</span>
         </div>
       </div>
     </footer>

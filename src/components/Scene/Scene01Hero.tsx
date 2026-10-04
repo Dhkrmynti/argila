@@ -56,7 +56,7 @@ export const Scene01Hero: React.FC = () => {
           className="max-w-2xl mx-auto space-y-3"
         >
           <p className="text-sm sm:text-base md:text-lg font-light text-[#a3abb8] leading-relaxed font-sans">
-            Deposit USDG to continuously stream cryptographic Aegis (AEGIS) yield per block.
+            Deposit USDG to continuously stream cryptographic Argila (ARGL) yield per block.
             Zero lockup epochs. Sub-second Robinhood Chain finality. Complete non-custodial sovereignty.
           </p>
 

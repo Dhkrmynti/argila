@@ -53,7 +53,7 @@ export const Scene01Awakening: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[#8e95a2] uppercase">TOTAL DISTRIBUTED:</span>
-              <span className="text-white font-semibold">0.00 AEGIS</span>
+              <span className="text-white font-semibold">0.00 ARGL</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[#8e95a2] uppercase">GAS:</span>
@@ -79,7 +79,7 @@ export const Scene01Awakening: React.FC = () => {
               <span className="text-[#c8f53c] font-normal">STREAM YIELD.</span>
             </h1>
             <p className="text-sm sm:text-base text-neutral-300 font-sans leading-relaxed max-w-xl">
-              Deposit USDG to continuously accrue Aegis (AEGIS) token rewards every block on Robinhood Chain. 
+              Deposit USDG to continuously accrue Argila (ARGL) token rewards every block on Robinhood Chain. 
               Zero lockup restrictions, instant liquidity withdrawal, and micro-cent gas fees.
             </p>
           </div>
@@ -164,11 +164,11 @@ export const Scene01Awakening: React.FC = () => {
             {/* Projected returns grid */}
             <div className="grid grid-cols-2 gap-3 font-mono text-xs">
               <div className="liquid-glass-subcard p-3 rounded-xl space-y-1">
-                <span className="text-[10px] text-[#8e95a2] uppercase block">DAILY AEGIS</span>
+                <span className="text-[10px] text-[#8e95a2] uppercase block">DAILY ARGL</span>
                 <span className="text-base font-semibold text-[#c8f53c]">+{dailyKawa}</span>
               </div>
               <div className="liquid-glass-subcard p-3 rounded-xl space-y-1">
-                <span className="text-[10px] text-[#8e95a2] uppercase block">MONTHLY AEGIS</span>
+                <span className="text-[10px] text-[#8e95a2] uppercase block">MONTHLY ARGL</span>
                 <span className="text-base font-semibold text-white">+{monthlyKawa}</span>
               </div>
             </div>

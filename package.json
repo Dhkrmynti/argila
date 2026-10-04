@@ -1,8 +1,8 @@
 {
-  "name": "aegis-protocol",
+  "name": "argila-protocol",
   "version": "1.0.0",
   "private": true,
-  "description": "Aegis — Web3 Staking Protocol on Robinhood Chain",
+  "description": "Argila — Web3 Staking Protocol on Robinhood Chain",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

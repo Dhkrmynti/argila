@@ -58,7 +58,7 @@ export const Scene08FinalCTA: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-sm sm:text-base text-[#a3abb8] max-w-xl mx-auto leading-relaxed font-sans"
         >
-          Deposit USDG and begin generating Aegis (AEGIS) yield on Robinhood Chain in under 60 seconds. Zero lockup restrictions.
+          Deposit USDG and begin generating Argila (ARGL) yield on Robinhood Chain in under 60 seconds. Zero lockup restrictions.
         </motion.p>
 
         <motion.div
@@ -111,17 +111,17 @@ export const Scene08FinalCTA: React.FC = () => {
             Stats
           </Link>
           <a
-            href="https://x.com/aegistak"
+            href="https://x.com/argilaxyz"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-[#c8f53c] transition"
           >
-            X (@aegistak)
+            X (@argilaxyz)
           </a>
         </div>
 
         <div className="text-[10px] text-neutral-500 uppercase tracking-widest">
-          &copy; 2026 AEGIS • IMMUTABLE
+          &copy; 2026 ARGILA • IMMUTABLE
         </div>
       </div>
     </section>

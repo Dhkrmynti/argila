@@ -11,7 +11,7 @@ export const Scene02ProtocolIntro: React.FC = () => {
       icon: Lock,
       title: "ZERO LOCKUPS",
       subtitle: "Unrestricted Capital Mobility",
-      desc: "Traditional staking traps liquidity in multi-week unbonding epochs. Aegis eliminates cooldown periods: deposit or withdraw your USDG principal at any second.",
+      desc: "Traditional staking traps liquidity in multi-week unbonding epochs. Argila eliminates cooldown periods: deposit or withdraw your USDG principal at any second.",
     },
     {
       index: "02",
@@ -25,7 +25,7 @@ export const Scene02ProtocolIntro: React.FC = () => {
       icon: Activity,
       title: "BLOCK ACCRUAL",
       subtitle: "Streaming Yield Mechanics",
-      desc: "Rewards do not wait for epoch boundaries. Every confirmed block on Robinhood Chain streams newly minted Aegis (AEGIS) tokens straight into your balance.",
+      desc: "Rewards do not wait for epoch boundaries. Every confirmed block on Robinhood Chain streams newly minted Argila (ARGL) tokens straight into your balance.",
     },
   ];
 

@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLayer5Staking } from "@/lib/hooks/useLayer5Staking";
 import { formatTokenAmount, formatApy, formatDuration, formatAddress } from "@/lib/utils/formatters";
 import { protocolConfig } from "@/lib/blockchain/config";
-import { Layer5Emblem } from "../Brand/Layer5Emblem";
 import { TransactionModal } from "../Transaction/TransactionModal";
 import { WalletConnectModal } from "../Wallet/WalletConnectModal";
-import { ArrowUpRight, ShieldCheck, Sparkles, Clock, Coins, Wallet, Layers, Activity } from "lucide-react";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import { GuillocheRosette } from "@/components/vault/Guilloche";
+import { RollingNumber } from "@/components/vault/RollingNumber";
+import { Stamp } from "@/components/vault/Stamp";
+import { ArrowUpRight, Wallet } from "lucide-react";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export const PositionViewer: React.FC = () => {
   const {
@@ -43,272 +46,228 @@ export const PositionViewer: React.FC = () => {
   };
 
   const getStateDescription = () => {
-    if (!isConnected) return "Connect an authorized Web3 wallet to inspect your staked liquidity.";
-    if (!hasStaked) return "Capital is resting. Stake tokens into the stream to begin compounding yield.";
-    if (kawaState === "awakened") return "Maximum protocol resonance achieved. Peak emission multiplier active.";
-    if (kawaState === "mature" || kawaState === "growing") return "Position continuously compounding across Robinhood Chain blocks.";
-    return "Position registered in protocol contract. Yield stream active.";
+    if (!isConnected) return "Connect your wallet to open your firing log.";
+    if (!hasStaked) return "This account holds no USDG in the kiln yet. Make a deposit to start earning ARGL.";
+    if (kawaState === "awakened") return "A long-standing deposit. ARGL keeps accruing to it every block.";
+    if (kawaState === "mature" || kawaState === "growing") return "Your deposit is earning ARGL with every Robinhood Chain block.";
+    return "Deposit recorded by the contract. Rewards are accruing.";
   };
 
+  const lines = [
+    {
+      k: "Principal in the kiln",
+      v: isConnected ? formatTokenAmount(stakedBalance, stakeDecimals, 2) : "0.00",
+      u: "USDG",
+      roll: true,
+    },
+    {
+      k: "Rewards not yet claimed",
+      v: isConnected ? formatTokenAmount(pendingRewards, 18, 4) : "0.0000",
+      u: "ARGL",
+      roll: true,
+      hi: true,
+    },
+    {
+      k: "Estimated APY",
+      v: calculatedApy !== undefined && calculatedApy > 0 ? formatApy(calculatedApy) : "—",
+      u: "",
+    },
+    {
+      k: "Held for",
+      v: isConnected && hasStaked ? formatDuration(stakingDuration) : "0 DAYS",
+      u: "",
+    },
+  ];
+
   return (
-    <div className="w-full space-y-8 font-sans text-left text-[#1C1B18]">
-      {/* 1. Warm Paper Editorial Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/[0.08] pb-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-[#6B665E] uppercase">
-              03 // PORTFOLIO TELEMETRY
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#283615]" />
-            <span className="font-cursive text-[#283615] text-lg tracking-normal lowercase">
-              ~ live non-custodial ~
-            </span>
-          </div>
-
-          <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-[#1C1B18] uppercase leading-tight">
-            USER <span className="text-[#283615]">POSITION</span>
-          </h1>
-
-          <p className="text-xs sm:text-sm font-sans tracking-normal text-[#6B665E] max-w-xl leading-relaxed">
-            Autonomous USDG staking stream and cryptographic Aegis reward checkpoint on Robinhood Chain.
-          </p>
-        </div>
-
-        {isConnected && address && (
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="text-[11px] font-mono text-[#1C1B18] liquid-glass-pill px-4 py-2 rounded-full flex items-center gap-2 border border-black/10 bg-white shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#283615]" />
-              {formatAddress(address)}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* 2. Top Metric Ribbon (4 Warm Paper Tiles) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-5 space-y-1">
-            <span className="text-[10px] font-mono text-[#6B665E] uppercase block tracking-wider">TOTAL STAKED</span>
-            <div className="font-mono text-lg sm:text-2xl font-bold text-[#1C1B18] tracking-tight truncate">
-              {isConnected ? formatTokenAmount(stakedBalance, stakeDecimals, 2) : "0.00"}
-            </div>
-            <span className="text-[10px] font-mono text-[#283615] font-semibold">USDG Principal</span>
-          </div>
-        </div>
-
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-5 space-y-1">
-            <span className="text-[10px] font-mono text-[#6B665E] uppercase block tracking-wider">UNCLAIMED REWARDS</span>
-            <div className="font-mono text-lg sm:text-2xl font-bold text-[#283615] tracking-tight truncate">
-              {isConnected ? formatTokenAmount(pendingRewards, 18, 4) : "0.0000"}
-            </div>
-            <span className="text-[10px] font-mono text-[#6B665E]">AEGIS Streamed</span>
-          </div>
-        </div>
-
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-5 space-y-1">
-            <span className="text-[10px] font-mono text-[#6B665E] uppercase block tracking-wider">EFFECTIVE RATE</span>
-            <div className="font-mono text-lg sm:text-2xl font-bold text-[#1C1B18] tracking-tight truncate">
-              {calculatedApy !== undefined && calculatedApy > 0 ? formatApy(calculatedApy) : "0.00%"}
-            </div>
-            <span className="text-[10px] font-mono text-[#6B665E]">Synthetix O(1)</span>
-          </div>
-        </div>
-
-        <div className="sg-tier-container">
-          <div className="sg-tier-underlay-1" />
-          <div className="sg-tier-underlay-2" />
-          <div className="sg-tier-main p-4 sm:p-5 space-y-1">
-            <span className="text-[10px] font-mono text-[#6B665E] uppercase block tracking-wider">STAKING DURATION</span>
-            <div className="font-mono text-lg sm:text-2xl font-bold text-[#1C1B18] tracking-tight truncate">
-              {isConnected && hasStaked ? formatDuration(stakingDuration) : "0d"}
-            </div>
-            <span className="text-[10px] font-mono text-[#283615] font-semibold">0s Lockup</span>
-          </div>
+    <div className="w-full text-left text-paper">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end pb-10 border-b border-terra/25">
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease }}
+          className="lg:col-span-7 font-display font-extrabold text-[2.6rem] sm:text-6xl lg:text-[4.6rem] leading-[0.95]"
+        >
+          Your firing log.
+        </motion.h1>
+        <div className="lg:col-span-5 space-y-3">
+          <p className="text-lg leading-relaxed text-paper-dim">{getStateDescription()}</p>
+          {isConnected && address && (
+            <p className="inline-flex items-center gap-2 font-mono text-[12px] text-paper">
+              <span className="w-1.5 h-1.5 rounded-full bg-terra-hi" aria-hidden="true" />
+              Account {formatAddress(address)}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* 3. Main Position Cards (Bento) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column (8 cols): Position Overview & Actions */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="sg-tier-container">
-            <div className="sg-tier-underlay-1" />
-            <div className="sg-tier-underlay-2" />
-            <div className="sg-tier-main p-5 sm:p-8 space-y-5 sm:space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-black/[0.08] pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 sm:p-3 rounded-2xl bg-[#FAF8F5] border border-black/[0.08] shrink-0 shadow-sm">
-                    <Layer5Emblem size={26} variant="black" animate={hasStaked} state={kawaState} />
-                  </div>
-                  <div>
-                    <h2 className="font-display font-black text-lg sm:text-2xl uppercase text-[#1C1B18] tracking-tight">
-                      LIQUID POSITION STATUS
-                    </h2>
-                    <span className="text-xs font-mono text-[#6B665E]">
-                      Contract: {formatAddress(protocolConfig.stakingContractAddress)}
-                    </span>
-                  </div>
-                </div>
-
-                <span
-                  className={`w-fit px-3 py-1 rounded-full text-xs font-mono font-bold tracking-wider ${
-                    hasStaked
-                      ? "bg-[#283615]/10 text-[#283615] border border-[#283615]/30"
-                      : "bg-black/[0.04] text-[#6B665E] border border-black/10"
-                  }`}
-                >
-                  {hasStaked ? "ACTIVE" : "INACTIVE"}
-                </span>
+      <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        {/* The open page */}
+        <motion.article
+          initial={{ opacity: 0, y: 40, rotate: -1 }}
+          animate={{ opacity: 1, y: 0, rotate: 0 }}
+          transition={{ duration: 1, ease, delay: 0.12 }}
+          className="lg:col-span-8 paper tint on-paper relative flex"
+        >
+          <div className="perf-y shrink-0 my-3 [--perf-hole:var(--ink)]" aria-hidden="true" />
+          <div className="flex-1 min-w-0 px-5 sm:px-9 py-7 sm:py-9">
+            <div className="flex items-start justify-between gap-4 pb-4 border-b-2 border-ink">
+              <div>
+                <h2 className="font-display font-extrabold text-2xl sm:text-3xl leading-none">Account summary</h2>
+                <p className="mt-1.5 font-mono text-[11px] text-ink/60">
+                  Contract {formatAddress(protocolConfig.stakingContractAddress)}
+                </p>
               </div>
+              {isConnected && (
+                <Stamp tone={hasStaked ? "cobalt" : "ink"} tilt={-7} className="text-[13px] shrink-0">
+                  {hasStaked ? "Firing" : "Cold"}
+                </Stamp>
+              )}
+            </div>
 
-              {/* State Narrative */}
-              <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-black/[0.06] space-y-1 text-xs font-mono">
-                <span className="text-[#6B665E] uppercase tracking-wider text-[10px] font-semibold block">
-                  POSITION STATE DIAGNOSTIC
-                </span>
-                <p className="text-[#1C1B18] leading-relaxed">{getStateDescription()}</p>
-              </div>
-
-              {/* Position Action Trigger Buttons */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
-                {isConnected ? (
-                  <>
-                    <LiquidButton
-                      variant="kawa"
-                      size="xl"
-                      onClick={claim}
-                      disabled={!hasRewards}
-                      className="w-full sm:flex-1 font-mono text-sm uppercase tracking-wider font-bold min-h-[54px]"
-                    >
-                      <span className="flex items-center justify-center gap-2">
-                        CLAIM REWARDS <Sparkles className="w-4.5 h-4.5 text-[#F6F3EC]" />
-                      </span>
-                    </LiquidButton>
-
-                    <LiquidButton
-                      variant="secondary"
-                      size="xl"
-                      onClick={() => setUnstakeModalOpen(true)}
-                      disabled={!hasStaked}
-                      className="w-full sm:flex-1 font-mono text-sm uppercase tracking-wider text-[#1C1B18] font-bold min-h-[54px]"
-                    >
-                      UNSTAKE LIQUIDITY
-                    </LiquidButton>
-
-                    <LiquidButton
-                      variant="secondary"
-                      size="xl"
-                      href="/stake"
-                      className="w-full sm:w-auto px-7 font-mono text-sm uppercase tracking-wider text-[#1C1B18] font-bold min-h-[54px]"
-                    >
-                      + ADD CAPITAL
-                    </LiquidButton>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setWalletModalOpen(true)}
-                    className="w-full min-h-[58px] py-4.5 px-8 rounded-full bg-[#1C1B18] hover:bg-[#283615] text-[#F6F3EC] font-mono text-sm sm:text-base font-bold uppercase tracking-[0.14em] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 cursor-pointer"
+            <dl className="ledger [--rule:rgba(18,14,11,0.16)]">
+              {lines.map((l) => (
+                <div key={l.k} className="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-6 items-baseline py-5 sm:py-6">
+                  <dt className="sm:col-span-5 font-display font-bold text-[17px]">{l.k}</dt>
+                  <dd
+                    className="sm:col-span-7 sm:text-right font-display font-extrabold leading-none text-4xl sm:text-5xl break-words"
                   >
-                    <Wallet className="w-5 h-5 text-[#F6F3EC]" />
-                    <span>CONNECT WALLET TO VIEW POSITION</span>
+                    {l.roll ? <RollingNumber value={l.v} /> : l.v}
+                    {l.u && <span className="ml-2 font-mono font-normal text-sm text-ink/55 align-middle">{l.u}</span>}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="mt-6 pt-6 border-t-2 border-ink">
+              {isConnected ? (
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button type="button" onClick={claim} disabled={!hasRewards} className="btn btn-ink sm:flex-1">
+                    Claim rewards
                   </button>
-                )}
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => setUnstakeModalOpen(true)}
+                    disabled={!hasStaked}
+                    className="btn btn-outline-ink sm:flex-1"
+                  >
+                    Withdraw USDG
+                  </button>
+                  <Link href="/stake" className="btn btn-outline-ink">
+                    Deposit more
+                  </Link>
+                </div>
+              ) : (
+                <button onClick={() => setWalletModalOpen(true)} className="btn btn-ink w-full !h-14">
+                  <Wallet className="w-5 h-5" />
+                  Connect a wallet to open your firing log
+                </button>
+              )}
             </div>
           </div>
-        </div>
+        </motion.article>
 
-        {/* Right Column (4 cols): Protocol Invariants */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="liquid-glass-card rounded-3xl p-6 sm:p-7 space-y-4 bg-white border border-black/[0.08]">
-            <div className="flex items-center justify-between border-b border-black/[0.08] pb-3 text-xs font-mono">
-              <span className="text-[#1C1B18] font-bold uppercase tracking-wider">PROTOCOL GUARANTEES</span>
-              <ShieldCheck className="w-4 h-4 text-[#283615]" />
-            </div>
-
-            <div className="space-y-3 text-xs font-mono">
-              <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-black/[0.06] space-y-1">
-                <span className="text-[10px] text-[#6B665E] uppercase block tracking-wider">UNBONDING SCHEDULE</span>
-                <span className="text-[#1C1B18] font-bold text-sm block">Instant (0 Blocks)</span>
-                <span className="text-[10px] text-[#6B665E] block">No lockup or cooldown periods</span>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-black/[0.06] space-y-1">
-                <span className="text-[10px] text-[#6B665E] uppercase block tracking-wider">SETTLEMENT GUARANTEE</span>
-                <span className="text-[#1C1B18] font-bold text-sm block">Micro-cent Execution</span>
-                <span className="text-[10px] text-[#6B665E] block">Sub-second Robinhood Chain finality</span>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-black/[0.06] space-y-1">
-                <span className="text-[10px] text-[#6B665E] uppercase block tracking-wider">SECURITY AUDIT</span>
-                <span className="text-[#283615] font-bold text-sm block">Synthetix Non-Custodial</span>
-                <span className="text-[10px] text-[#6B665E] block">OpenZeppelin audited libraries</span>
-              </div>
-            </div>
+        {/* Terms printed inside the back cover */}
+        <motion.aside
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease, delay: 0.24 }}
+          className="lg:col-span-4 relative bg-ink-2 border border-terra/30 frame-double overflow-hidden"
+        >
+          <GuillocheRosette className="pointer-events-none absolute -right-24 -bottom-24 w-72 h-72 text-terra/20" />
+          <div className="relative px-6 sm:px-8 py-8">
+            <h2 className="font-display font-bold text-xl">Account terms</h2>
+            <dl className="mt-5 ledger [--rule:rgba(210,105,60,0.18)]">
+              {[
+                ["Withdrawal", "Instant, any amount", "No lockup or notice period"],
+                ["Fees", "None charged by the kiln", "Network fee paid in ETH"],
+                ["Rewards", "Accrue every block", "Claim them whenever you like"],
+              ].map(([k, v, d]) => (
+                <div key={k} className="py-4">
+                  <dt className="font-mono text-[11px] text-paper-faint">{k}</dt>
+                  <dd className="mt-1 font-display font-bold text-[17px]">{v}</dd>
+                  <dd className="text-[14px] text-paper-dim">{d}</dd>
+                </div>
+              ))}
+            </dl>
+            <a
+              href={`${protocolConfig.explorerUrl}/address/${protocolConfig.stakingContractAddress}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-1.5 wide text-[14px] text-terra-hi hover:text-paper transition-colors"
+            >
+              Inspect the contract <ArrowUpRight className="w-4 h-4" />
+            </a>
           </div>
-        </div>
+        </motion.aside>
       </div>
 
-      {/* Transaction & Unstake Modals */}
       <TransactionModal state={txState} onClose={resetTxState} />
       <WalletConnectModal isOpen={walletModalOpen} onClose={() => setWalletModalOpen(false)} />
 
-      {/* Exit Pool Unstake Modal */}
-      {unstakeModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 space-y-5 border border-black/10 shadow-2xl max-w-md w-full text-[#1C1B18]">
-            <h3 className="font-display font-black text-2xl uppercase text-[#1C1B18] tracking-tight">UNSTAKE CAPITAL</h3>
-            <p className="text-xs font-mono text-[#6B665E]">
-              Enter USDG amount to unstake. Max balance: {formatTokenAmount(stakedBalance, stakeDecimals, 2)} USDG
-            </p>
+      <AnimatePresence>
+        {unstakeModalOpen && (
+          <motion.div
+            key="unstake"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-3/80 backdrop-blur-[3px]"
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="pos-unstake-title"
+              initial={{ y: 40, opacity: 0, rotate: -1.5 }}
+              animate={{ y: 0, opacity: 1, rotate: 0 }}
+              exit={{ y: 24, opacity: 0 }}
+              transition={{ duration: 0.5, ease }}
+              className="w-full max-w-md paper tint on-paper"
+            >
+              <div className="perf-x mx-3 [--perf-hole:var(--ink-3)]" aria-hidden="true" />
+              <div className="px-6 sm:px-8 pt-5 pb-8 space-y-5">
+                <h3 id="pos-unstake-title" className="font-display font-extrabold text-3xl leading-none">Withdrawal slip</h3>
+                <p className="font-mono text-[12px] text-ink/65 tnum">
+                  Available {formatTokenAmount(stakedBalance, stakeDecimals, 2)} USDG
+                </p>
 
-            <div className="liquid-glass-input rounded-2xl p-3.5 flex items-center justify-between bg-[#FAF8F5] border border-black/[0.1]">
-              <input
-                type="number"
-                placeholder="0.00"
-                value={unstakeAmount}
-                onChange={(e) => setUnstakeAmount(e.target.value)}
-                className="w-full bg-transparent font-mono text-2xl text-[#1C1B18] outline-none font-bold"
-              />
-              <button
-                type="button"
-                onClick={() => setUnstakeAmount(formatTokenAmount(stakedBalance, stakeDecimals, 6))}
-                className="shrink-0 text-xs font-mono px-4 py-2 rounded-full bg-white border border-black/15 hover:bg-black/5 text-[#1C1B18] font-bold shadow-sm transition cursor-pointer"
-              >
-                MAX
-              </button>
-            </div>
+                <div className="flex items-end gap-3 border-b-2 border-ink pb-2 focus-within:border-cobalt-deep transition-colors">
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    value={unstakeAmount}
+                    onChange={(e) => setUnstakeAmount(e.target.value)}
+                    className="tnum w-full min-w-0 bg-transparent font-display font-extrabold text-4xl text-ink outline-none placeholder:text-ink/25"
+                    aria-label="Withdraw amount"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setUnstakeAmount(formatTokenAmount(stakedBalance, stakeDecimals, 6))}
+                    className="shrink-0 px-3 h-8 mb-1 border border-ink/40 font-mono text-[11px] hover:bg-ink hover:text-paper transition-colors cursor-pointer"
+                  >
+                    Max
+                  </button>
+                </div>
 
-            <div className="flex gap-3 pt-2">
-              <LiquidButton
-                variant="secondary"
-                size="lg"
-                onClick={() => setUnstakeModalOpen(false)}
-                className="flex-1 font-mono text-sm uppercase min-h-[50px]"
-              >
-                CANCEL
-              </LiquidButton>
-              <LiquidButton
-                variant="kawa"
-                size="lg"
-                onClick={handleUnstakeSubmit}
-                disabled={!unstakeAmount || parseFloat(unstakeAmount) <= 0}
-                className="flex-1 font-mono text-sm uppercase font-bold min-h-[50px]"
-              >
-                CONFIRM UNSTAKE
-              </LiquidButton>
-            </div>
-          </div>
-        </div>
-      )}
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <button type="button" onClick={() => setUnstakeModalOpen(false)} className="btn btn-outline-ink">
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleUnstakeSubmit}
+                    disabled={!unstakeAmount || parseFloat(unstakeAmount) <= 0}
+                    className="btn btn-ink"
+                  >
+                    Confirm withdrawal
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

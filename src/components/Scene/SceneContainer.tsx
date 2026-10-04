@@ -219,7 +219,7 @@ export const SceneContainer: React.FC = () => {
               </h1>
 
               <p className="text-xs sm:text-base md:text-lg text-neutral-300 max-w-2xl mx-auto font-sans leading-relaxed px-2">
-                Deposit USDG to continuously stream cryptographic Aegis (AEGIS) yield per block.
+                Deposit USDG to continuously stream cryptographic Argila (ARGL) yield per block.
                 Zero lockup epochs. Sub-second Robinhood Chain finality.
               </p>
 
@@ -276,7 +276,7 @@ export const SceneContainer: React.FC = () => {
                 CAPITAL THAT <span className="text-[#c8f53c]">KEEPS MOVING</span>
               </h2>
               <p className="text-[11px] sm:text-sm font-mono text-neutral-400 max-w-xl">
-                Traditional staking traps liquidity in multi-week cooldown epochs. Aegis replaces friction with continuous streaming yield.
+                Traditional staking traps liquidity in multi-week cooldown epochs. Argila replaces friction with continuous streaming yield.
               </p>
             </motion.div>
 
@@ -403,7 +403,7 @@ export const SceneContainer: React.FC = () => {
                 </div>
                 <h4 className="font-editorial text-sm sm:text-xl font-bold uppercase text-white">STREAM YIELD</h4>
                 <p className="text-[10px] sm:text-xs text-neutral-400 leading-relaxed font-sans line-clamp-2 sm:line-clamp-none">
-                  Newly minted Aegis (AEGIS) tokens stream per block into your position.
+                  Newly minted Argila (ARGL) tokens stream per block into your position.
                 </p>
                 <div className="text-[9px] sm:text-[10px] font-mono text-[#c8f53c]">Real-Time Accrual</div>
               </motion.div>
@@ -462,7 +462,7 @@ export const SceneContainer: React.FC = () => {
                     </div>
                     <div className="text-[10px] sm:text-xs font-mono text-neutral-300 flex items-center gap-2 pt-0.5 sm:pt-1">
                       <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#c8f53c] animate-ping" />
-                      <span>Continuous Aegis Block Streaming on Robinhood Chain</span>
+                      <span>Continuous Argila Block Streaming on Robinhood Chain</span>
                     </div>
                   </div>
 
@@ -537,7 +537,7 @@ export const SceneContainer: React.FC = () => {
               </h2>
 
               <p className="text-xs sm:text-base text-neutral-300 max-w-xl mx-auto leading-relaxed font-sans px-2">
-                Deposit USDG and begin generating non-custodial Aegis (AEGIS) yield on Robinhood Chain in under 60 seconds. Zero lockups, micro-cent gas.
+                Deposit USDG and begin generating non-custodial Argila (ARGL) yield on Robinhood Chain in under 60 seconds. Zero lockups, micro-cent gas.
               </p>
             </motion.div>
 

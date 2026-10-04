@@ -104,15 +104,15 @@ export const Scene05YieldRadar: React.FC = () => {
                 <div className="grid grid-cols-3 gap-3 pt-6 border-t border-white/10 font-mono text-xs">
                   <div className="p-3.5 rounded-xl liquid-glass-subcard border border-white/5">
                     <span className="text-[10px] text-[#8e95a2] uppercase block">DAILY EST.</span>
-                    <span className="text-white font-bold text-sm">+{dailyReturn} AEGIS</span>
+                    <span className="text-white font-bold text-sm">+{dailyReturn} ARGL</span>
                   </div>
                   <div className="p-3.5 rounded-xl liquid-glass-subcard border border-white/5">
                     <span className="text-[10px] text-[#8e95a2] uppercase block">MONTHLY</span>
-                    <span className="text-white font-bold text-sm">+{monthlyReturn} AEGIS</span>
+                    <span className="text-white font-bold text-sm">+{monthlyReturn} ARGL</span>
                   </div>
                   <div className="p-3.5 rounded-xl liquid-glass-subcard border border-white/5">
                     <span className="text-[10px] text-[#8e95a2] uppercase block">1 YEAR</span>
-                    <span className="text-[#c8f53c] font-bold text-sm">+{yearlyReturn} AEGIS</span>
+                    <span className="text-[#c8f53c] font-bold text-sm">+{yearlyReturn} ARGL</span>
                   </div>
                 </div>
               </div>
@@ -135,7 +135,7 @@ export const Scene05YieldRadar: React.FC = () => {
                   {liveRewardsFormatted}
                 </div>
                 <span className="text-xs font-mono text-neutral-400 block pt-1">
-                  AEGIS accrued continuously
+                  ARGL accrued continuously
                 </span>
               </div>
 

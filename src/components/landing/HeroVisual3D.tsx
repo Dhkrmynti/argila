@@ -4,11 +4,11 @@ import React, { useRef, useMemo, useState, useEffect, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-interface AegisShieldProps {
+interface ArgilaShieldProps {
   scrollProgress?: number;
 }
 
-const AegisShieldArtifact: React.FC<AegisShieldProps> = ({ scrollProgress = 0 }) => {
+const ArgilaShieldArtifact: React.FC<ArgilaShieldProps> = ({ scrollProgress = 0 }) => {
   const rootGroupRef = useRef<THREE.Group>(null);
   const medallionRef = useRef<THREE.Group>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
@@ -29,10 +29,10 @@ const AegisShieldArtifact: React.FC<AegisShieldProps> = ({ scrollProgress = 0 })
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, []);
 
-  // Load the Aegis Emblem texture
+  // Load the Argila Emblem texture
   const emblemTexture = useMemo(() => {
     const loader = new THREE.TextureLoader();
-    const tex = loader.load("/aegis-logo-transparent.png");
+    const tex = loader.load("/argila-logo-ink.png");
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.generateMipmaps = true;
     tex.minFilter = THREE.LinearMipmapLinearFilter;
@@ -264,8 +264,8 @@ const HeroVisualFallback: React.FC = () => {
           <div className="relative w-[70%] h-[70%] flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/aegis-logo-transparent.png"
-              alt="Aegis Shield"
+              src="/argila-logo-ink.png"
+              alt="Argila Shield"
               className="w-full h-full object-contain drop-shadow-[0_0_35px_rgba(184,243,74,0.35)]"
             />
           </div>
@@ -308,7 +308,7 @@ export const HeroVisual3D: React.FC<HeroVisual3DProps> = ({
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
           className="w-full h-full pointer-events-auto"
         >
-          <AegisShieldArtifact scrollProgress={scrollProgress} />
+          <ArgilaShieldArtifact scrollProgress={scrollProgress} />
         </Canvas>
       </Suspense>
     </div>

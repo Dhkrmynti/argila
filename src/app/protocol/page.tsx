@@ -2,8 +2,8 @@ import React from "react";
 import { Layer5Emblem } from "@/components/Brand/Layer5Emblem";
 
 export const metadata = {
-  title: "Protocol Specification • Aegis",
-  description: "Comprehensive specification and architectural mechanics of Aegis Staking Protocol on Robinhood Chain.",
+  title: "Protocol Specification • Argila",
+  description: "Comprehensive specification and architectural mechanics of Argila on Robinhood Chain.",
 };
 
 export default function ProtocolPage() {
@@ -37,10 +37,10 @@ export default function ProtocolPage() {
             </h2>
           </div>
           <p className="text-[#2C2A26] leading-relaxed text-sm sm:text-base font-sans">
-            In classical antiquity, the <strong className="font-bold text-[#1C1B18]">Aegis (Αἰγίς)</strong> symbolized an impenetrable golden shield carrying the divine mandate of protection and sovereign security. In decentralized finance, Aegis translates this principle into autonomous, non-custodial staking infrastructure engineered specifically for Robinhood Chain L2.
+            In classical antiquity, the <strong className="font-bold text-[#1C1B18]">Argila</strong> symbolized an impenetrable golden shield carrying the divine mandate of protection and sovereign security. In decentralized finance, Argila translates this principle into autonomous, non-custodial staking infrastructure engineered specifically for Robinhood Chain L2.
           </p>
           <p className="text-[#5A554E] leading-relaxed text-sm sm:text-base font-sans">
-            Traditional staking systems rely on rigid lockup epochs, punitive slashing schedules, and gas-intensive multi-stage interactions. Aegis replaces friction with continuous flow: USDG deposited into the smart contract instantly enters an algorithmic reward stream calculated on every single block with zero custody surrender.
+            Traditional staking systems rely on rigid lockup epochs, punitive slashing schedules, and gas-intensive multi-stage interactions. Argila replaces friction with continuous flow: USDG deposited into the smart contract instantly enters an algorithmic reward stream calculated on every single block with zero custody surrender.
           </p>
         </section>
 
@@ -53,7 +53,7 @@ export default function ProtocolPage() {
             </h2>
           </div>
           <p className="text-[#2C2A26] leading-relaxed text-sm font-sans">
-            Aegis implements constant-time <code className="text-xs font-mono bg-[#FAF8F5] text-[#283615] font-bold px-2 py-0.5 rounded border border-black/[0.08]">O(1)</code> Synthetix-standard reward distribution. Regardless of whether there are 10 stakers or 100,000 stakers, every deposit, withdrawal, and claim executes with minimal computation and deterministic gas.
+            Argila implements constant-time <code className="text-xs font-mono bg-[#FAF8F5] text-[#283615] font-bold px-2 py-0.5 rounded border border-black/[0.08]">O(1)</code> Synthetix-standard reward distribution. Regardless of whether there are 10 stakers or 100,000 stakers, every deposit, withdrawal, and claim executes with minimal computation and deterministic gas.
           </p>
 
           <div className="p-6 bg-white border border-black/[0.08] rounded-2xl font-mono text-xs space-y-4 shadow-sm">
@@ -104,7 +104,7 @@ export default function ProtocolPage() {
                 Continuous Stream
               </span>
               <span className="text-xs sm:text-sm text-[#5A554E] sm:w-2/3 leading-relaxed">
-                Aegis yield accrues continuously every second without requiring manual re-staking or lock-in penalties.
+                ARGL yield accrues continuously every second without requiring manual re-staking or lock-in penalties.
               </span>
             </div>
             <div className="p-5 flex flex-col sm:flex-row justify-between gap-2">
@@ -112,7 +112,7 @@ export default function ProtocolPage() {
                 Claim (Harvest Rewards)
               </span>
               <span className="text-xs sm:text-sm text-[#5A554E] sm:w-2/3 leading-relaxed">
-                Accrued Aegis rewards are transferred directly to the user wallet while the staked USDG principal remains active.
+                Accrued ARGL rewards are transferred directly to the user wallet while the staked USDG principal remains active.
               </span>
             </div>
             <div className="p-5 flex flex-col sm:flex-row justify-between gap-2">
@@ -177,7 +177,7 @@ export default function ProtocolPage() {
               <span className="text-[#1C1B18] font-bold font-mono text-[11px]">TBA (Announced at Mainnet Launch)</span>
             </div>
             <div className="p-4 rounded-xl bg-white border border-black/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
-              <span className="text-[#6B665E] uppercase text-[10px] tracking-wider font-semibold">Reward Token (AEGIS)</span>
+              <span className="text-[#6B665E] uppercase text-[10px] tracking-wider font-semibold">Reward Token (ARGL)</span>
               <span className="text-[#1C1B18] font-bold font-mono text-[11px]">TBA (Announced at Mainnet Launch)</span>
             </div>
           </div>
@@ -185,10 +185,10 @@ export default function ProtocolPage() {
 
         {/* Editorial Colophon */}
         <footer className="pt-12 border-t border-black/[0.08] text-center text-xs font-mono text-[#6B665E] uppercase tracking-widest space-y-3">
-          <div className="font-bold">AEGIS PROTOCOL • SPECIFICATION RELEASE 1.0</div>
+          <div className="font-bold">ARGILA • SPECIFICATION RELEASE 1.0</div>
           <div className="flex items-center justify-center gap-2">
             <a
-              href="https://x.com/aegistak"
+              href="https://x.com/argilaxyz"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-[#5A554E] hover:text-[#1C1B18] transition lowercase text-xs font-semibold"
@@ -196,7 +196,7 @@ export default function ProtocolPage() {
               <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
-              <span>@aegistak</span>
+              <span>@argilaxyz</span>
             </a>
           </div>
           <div className="text-[10px] text-[#6B665E]">ROBINHOOD CHAIN MAINNET • ARCHITECTURAL SPECIFICATION</div>

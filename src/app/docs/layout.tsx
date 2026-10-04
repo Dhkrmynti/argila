@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Docs • Aegis",
-  description: "Official Aegis Protocol documentation and technical reference on Robinhood Chain.",
+  title: "Docs • Argila",
+  description: "Official Argila documentation and technical reference on Robinhood Chain.",
 };
 
 export default function DocsLayout({

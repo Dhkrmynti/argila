@@ -228,19 +228,19 @@ export const Scene04StakingCore: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono border-y border-white/5 py-4 text-xs">
               <div className="liquid-glass-subcard rounded-xl p-3.5 space-y-1">
                 <span className="text-[10px] text-[#8e95a2] uppercase block">PROJECTED DAILY YIELD</span>
-                <span className="text-base font-semibold text-white">~{estDaily} AEGIS</span>
+                <span className="text-base font-semibold text-white">~{estDaily} ARGL</span>
                 <span className="text-[10px] text-[#8e95a2] block">Continuous Block Emission</span>
               </div>
 
               <div className="liquid-glass-subcard rounded-xl p-3.5 space-y-1">
                 <span className="text-[10px] text-[#8e95a2] uppercase block">PROJECTED MONTHLY</span>
-                <span className="text-base font-semibold text-[#c8f53c]">~{estMonthly} AEGIS</span>
+                <span className="text-base font-semibold text-[#c8f53c]">~{estMonthly} ARGL</span>
                 <span className="text-[10px] text-[#8e95a2] block">No Lockup Restrictions</span>
               </div>
 
               <div className="liquid-glass-subcard rounded-xl p-3.5 space-y-1">
                 <span className="text-[10px] text-[#8e95a2] uppercase block">ANNUAL ESTIMATE ({formatApy(calculatedApy)})</span>
-                <span className="text-base font-semibold text-emerald-400">~{estYearly} AEGIS</span>
+                <span className="text-base font-semibold text-emerald-400">~{estYearly} ARGL</span>
                 <span className="text-[10px] text-[#8e95a2] block">Compounded Yield Rate</span>
               </div>
             </div>

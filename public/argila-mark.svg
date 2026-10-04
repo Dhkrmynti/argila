@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs><mask id="m"><rect width="100" height="100" fill="#fff"/><g fill="#000"><rect x="10" y="50" width="80" height="4.5"/><rect x="10" y="62" width="80" height="4.5"/></g></mask></defs>
+  <path d="M35 10H65V15Q59.5 16 59.5 21.5V26C59.5 31 83 38.5 83 59C83 75 71.5 84.5 64 89H36C28.5 84.5 17 75 17 59C17 38.5 40.5 31 40.5 26V21.5Q40.5 16 35 15Z" fill="#D2693C" mask="url(#m)"/>
+</svg>
