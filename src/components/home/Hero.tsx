@@ -105,8 +105,9 @@ export const Hero: React.FC = () => {
           Patience, <span className="text-heat">fired</span> into value.
         </motion.h1>
 
-        <motion.p {...rise(2)} className="mt-5 text-[17px] sm:text-xl text-bone-2">
-          Stake USDG. Earn ARGL every block.
+        <motion.p {...rise(2)} className="mt-5 max-w-[38rem] text-[17px] sm:text-xl text-bone-2 text-balance">
+          Your USDG is the clay. Every block, the kiln fires a little more ARGL, and your principal comes out exactly
+          as it went in.
         </motion.p>
 
         <motion.div {...rise(3)} className="mt-8 flex flex-col min-[420px]:flex-row gap-3">
